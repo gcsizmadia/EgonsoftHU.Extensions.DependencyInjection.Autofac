@@ -206,7 +206,7 @@ Configure an assembly registry. There is a default implementation you can use.
 
 The default implementation:
 - requires your assembly file name prefixes
-- will search for assembly files with the following pattern: <span style="font-family: Consolas, 'Courier New', Courier, monospace;">__*YourPrefix*.\*.dll__</span>
+- will search for assembly files with the following pattern: `YourPrefix.*.dll`
 
 You can provide your own implementation:
 - implement this interface: `EgonsoftHU.Extensions.DependencyInjection.Autofac.IAssemblyRegistry`
