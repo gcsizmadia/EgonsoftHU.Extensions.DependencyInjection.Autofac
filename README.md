@@ -29,8 +29,10 @@ Suppose you have a Web API project that uses a couple of your own libraries.
 
 ### Example solution
 
-![C# project](images/CSClassLibrary.png "C# Class Library") YourCompany.YourProduct.ComponentA.csproj\
-![Placeholder](images/Placeholder.png) ![Dependencies](images/ReferenceGroup.png "Dependencies") Dependencies\
+![C# project](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library") 
+![C# project](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library") 
+YourCompany.YourProduct.ComponentA.csproj\
+![Placeholder](images/Placeholder.png) ![Dependencies](images/Reference_16x.svg "Dependencies") Dependencies\
 ![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![NuGet reference](images/PackageReference.png "Packages") Packages\
 ![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![NuGet reference](images/PackageReference.png "Package Reference") Autofac (6.3.0)\
 ![Placeholder](images/Placeholder.png) ![C# file](images/CSFileNode.png "C# File") DependencyModule.cs `// registers ServiceA into Autofac.ContainerBuilder`\
