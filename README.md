@@ -238,24 +238,24 @@ namespace YourCompany.YourProduct.WebApi
                     .ConfigureContainer<ContainerBuilder>(
                         builder =>
                         {
-                            // Configure assembly registry - option #1
+                            // Step #1: Configure assembly registry - option #1
                             // Use the default assembly registry.
                             // Provide your assembly file name prefixes.
                             AssemblyRegistryConfiguration.UseDefaultAssemblyRegistry(nameof(YourCompany));
 
-                            // Configure assembly registry - option #2
+                            // Step #1: Configure assembly registry - option #2
                             // The custom assembly registry must:
                             // - implement this interface: EgonsoftHU.Extensions.DependencyInjection.Autofac.IAssemblyRegistry
                             // - have a parameterless ctor that initializes the instance
                             AssemblyRegistryConfiguration.UseAssemblyRegistry<YourCustomAssemblyRegistry>();
 
-                            // Configure assembly registry - option #3
+                            // Step #1: Configure assembly registry - option #3
                             // The custom assembly registry must:
                             // - implement this interface: EgonsoftHU.Extensions.DependencyInjection.Autofac.IAssemblyRegistry
                             IAssemblyRegistry assemblyRegistry = /* get an initialized instance of YourCustomAssemblyRegistry */
                             AssemblyRegistryConfiguration.UseAssemblyRegistry(assemblyRegistry);
 
-                            // Register the module that will discover and register all other modules.
+                            // Step #2: Register the module that will discover and register all other modules.
                             builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.Autofac.DependencyModule>();
                         }
                     )
@@ -280,24 +280,24 @@ namespace YourCompany.YourProduct.WebApi
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            // Configure assembly registry - option #1
+            // Step #1: Configure assembly registry - option #1
             // Use the default assembly registry.
             // Initialize your assembly file name prefixes.
             AssemblyRegistryConfiguration.UseDefaultAssemblyRegistry(nameof(YourCompany));
 
-            // Configure assembly registry - option #2
+            // Step #1: Configure assembly registry - option #2
             // The custom assembly registry must:
             // - implement this interface: EgonsoftHU.Extensions.DependencyInjection.Autofac.IAssemblyRegistry
             // - have a parameterless ctor that initializes the instance
             AssemblyRegistryConfiguration.UseAssemblyRegistry<YourCustomAssemblyRegistry>();
 
-            // Configure assembly registry - option #3
+            // Step #1: Configure assembly registry - option #3
             // The custom assembly registry must:
             // - implement this interface: EgonsoftHU.Extensions.DependencyInjection.Autofac.IAssemblyRegistry
             IAssemblyRegistry assemblyRegistry = /* get an initialized instance of YourCustomAssemblyRegistry */
             AssemblyRegistryConfiguration.UseAssemblyRegistry(assemblyRegistry);
 
-            // Register the module that will discover and register all other modules.
+            // Step #2: Register the module that will discover and register all other modules.
             builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.Autofac.DependencyModule>();
         }
     }
