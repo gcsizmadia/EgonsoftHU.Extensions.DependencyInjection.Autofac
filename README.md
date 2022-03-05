@@ -29,36 +29,172 @@ Suppose you have a Web API project that uses a couple of your own libraries.
 
 ### Example solution
 
+![C# Class Library](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library") 
+![C# Class Library](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library") 
+YourCompany.YourProduct.ComponentA.csproj\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Dependencies](images/light/ReferenceGroup.png#gh-light-mode-only "Dependencies") 
+![Dependencies](images/dark/ReferenceGroup.png#gh-dark-mode-only "Dependencies") 
+Dependencies\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Packages](images/light/PackageReference.png#gh-light-mode-only "Packages") 
+![Packages](images/dark/PackageReference.png#gh-dark-mode-only "Packages") 
+Packages\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Package Reference](images/light/PackageReference.png#gh-light-mode-only "Package Reference") 
+![Package Reference](images/dark/PackageReference.png#gh-dark-mode-only "Package Reference") 
+Autofac (6.3.0)\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![C# file](images/light/CSFileNode.png#gh-light-mode-only "C# File") 
+![C# file](images/dark/CSFileNode.png#gh-dark-mode-only "C# File") 
+DependencyModule.cs `// registers ServiceA into Autofac.ContainerBuilder`\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![C# file](images/light/CSFileNode.png#gh-light-mode-only "C# File") 
+![C# file](images/dark/CSFileNode.png#gh-dark-mode-only "C# File") 
+ServiceA.cs
+
 ![C# project](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library") 
 ![C# project](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library") 
-YourCompany.YourProduct.ComponentA.csproj\
-![Placeholder](images/Placeholder.png) ![Dependencies](images/Reference_16x.svg "Dependencies") Dependencies\
-![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![NuGet reference](images/PackageReference.png "Packages") Packages\
-![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![NuGet reference](images/PackageReference.png "Package Reference") Autofac (6.3.0)\
-![Placeholder](images/Placeholder.png) ![C# file](images/CSFileNode.png "C# File") DependencyModule.cs `// registers ServiceA into Autofac.ContainerBuilder`\
-![Placeholder](images/Placeholder.png) ![C# file](images/CSFileNode.png "C# File") ServiceA.cs
+YourCompany.YourProduct.ComponentB.csproj\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Dependencies](images/light/ReferenceGroup.png#gh-light-mode-only "Dependencies") 
+![Dependencies](images/dark/ReferenceGroup.png#gh-dark-mode-only "Dependencies") 
+Dependencies\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Packages](images/light/PackageReference.png#gh-light-mode-only "Packages") 
+![Packages](images/dark/PackageReference.png#gh-dark-mode-only "Packages") 
+Packages\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Package Reference](images/light/PackageReference.png#gh-light-mode-only "Package Reference") 
+![Package Reference](images/dark/PackageReference.png#gh-dark-mode-only "Package Reference") 
+Autofac (6.3.0)\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![C# file](images/light/CSFileNode.png#gh-light-mode-only "C# File") 
+![C# file](images/dark/CSFileNode.png#gh-dark-mode-only "C# File") 
+DependencyModule.cs `// registers ServiceB into Autofac.ContainerBuilder`\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![C# file](images/light/CSFileNode.png#gh-light-mode-only "C# File") 
+![C# file](images/dark/CSFileNode.png#gh-dark-mode-only "C# File") 
+ServiceB.cs
 
-![C# project](images/CSClassLibrary.png "C# Class Library") YourCompany.YourProduct.ComponentB.csproj\
-![Placeholder](images/Placeholder.png) ![Dependencies](images/ReferenceGroup.png "Dependencies") Dependencies\
-![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![NuGet reference](images/PackageReference.png "Packages") Packages\
-![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![NuGet reference](images/PackageReference.png "Package Reference") Autofac (6.3.0)\
-![Placeholder](images/Placeholder.png) ![C# file](images/CSFileNode.png "C# File") DependencyModule.cs `// registers ServiceB into Autofac.ContainerBuilder`\
-![Placeholder](images/Placeholder.png) ![C# file](images/CSFileNode.png "C# File") ServiceB.cs
-
-![C# project](images/CSWebApplication.png "C# Web Application") YourCompany.YourProduct.WebApi.csproj\
-![Placeholder](images/Placeholder.png) ![Dependencies](images/ReferenceGroup.png "Dependencies") Dependencies\
-![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![NuGet reference](images/PackageReference.png "Packages") Packages\
-![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![NuGet reference](images/PackageReference.png "Package Reference") Autofac (6.3.0)\
-![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![NuGet reference](images/PackageReference.png "Package Reference") Autofac.Extensions.DependencyInjection (7.2.0)\
-![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![NuGet reference](images/PackageReference.png "Package Reference") EgonsoftHU.Extensions.DependencyInjection.Autofac (1.0.0)\
-![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![Dependencies](images/Application.png "Projects") Projects\
-![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![C# project reference](images/Application.png "Project Reference") YourCompany.YourProduct.ComponentA\
-![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![C# project reference](images/Application.png "Project Reference") YourCompany.YourProduct.ComponentB\
-![Placeholder](images/Placeholder.png) ![C# file](images/FolderOpened.png "Folder") Services\
-![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![C# file](images/CSFileNode.png "C# File") DependencyModule.cs `// registers ServiceC into Autofac.ContainerBuilder`\
-![Placeholder](images/Placeholder.png) ![Placeholder](images/Placeholder.png) ![C# file](images/CSFileNode.png "C# File") ServiceC.cs\
-![Placeholder](images/Placeholder.png) ![C# file](images/CSFileNode.png "C# File") Program.cs\
-![Placeholder](images/Placeholder.png) ![C# file](images/CSFileNode.png "C# File") Startup.cs
+![C# Web Application](images/light/CSWebApplication.png#gh-light-mode-only "C# Web Application") 
+![C# Web Application](images/dark/CSWebApplication.png#gh-dark-mode-only "C# Web Application") 
+YourCompany.YourProduct.WebApi.csproj\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Dependencies](images/light/ReferenceGroup.png#gh-light-mode-only "Dependencies") 
+![Dependencies](images/dark/ReferenceGroup.png#gh-dark-mode-only "Dependencies") 
+Dependencies\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Packages](images/light/PackageReference.png#gh-light-mode-only "Packages") 
+![Packages](images/dark/PackageReference.png#gh-dark-mode-only "Packages") 
+Packages\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Package Reference](images/light/PackageReference.png#gh-light-mode-only "Package Reference") 
+![Package Reference](images/dark/PackageReference.png#gh-dark-mode-only "Package Reference") 
+Autofac (6.3.0)\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Package Reference](images/light/PackageReference.png#gh-light-mode-only "Package Reference") 
+![Package Reference](images/dark/PackageReference.png#gh-dark-mode-only "Package Reference") 
+Autofac.Extensions.DependencyInjection (7.2.0)\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Package Reference](images/light/PackageReference.png#gh-light-mode-only "Package Reference") 
+![Package Reference](images/dark/PackageReference.png#gh-dark-mode-only "Package Reference") 
+EgonsoftHU.Extensions.DependencyInjection.Autofac (1.0.0)\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Projects](images/light/Application.png#gh-light-mode-only "Projects") 
+![Projects](images/dark/Application.png#gh-dark-mode-only "Projects") 
+Projects\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Project reference](images/light/Application.png#gh-light-mode-only "Project Reference") 
+![Project reference](images/dark/Application.png#gh-dark-mode-only "Project Reference") 
+YourCompany.YourProduct.ComponentA\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Project reference](images/light/Application.png#gh-light-mode-only "Project Reference") 
+![Project reference](images/dark/Application.png#gh-dark-mode-only "Project Reference") 
+YourCompany.YourProduct.ComponentB\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Folder](images/light/FolderOpened.png#gh-light-mode-only "Folder") 
+![Folder](images/dark/FolderOpened.png#gh-dark-mode-only "Folder") 
+Services\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![C# file](images/light/CSFileNode.png#gh-light-mode-only "C# File") 
+![C# file](images/dark/CSFileNode.png#gh-dark-mode-only "C# File") 
+DependencyModule.cs `// registers ServiceC into Autofac.ContainerBuilder`\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![C# file](images/light/CSFileNode.png#gh-light-mode-only "C# File") 
+![C# file](images/dark/CSFileNode.png#gh-dark-mode-only "C# File") 
+ServiceC.cs\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![C# file](images/light/CSFileNode.png#gh-light-mode-only "C# File") 
+![C# file](images/dark/CSFileNode.png#gh-dark-mode-only "C# File") 
+Program.cs\
+![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
+![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
+![C# file](images/light/CSFileNode.png#gh-light-mode-only "C# File") 
+![C# file](images/dark/CSFileNode.png#gh-dark-mode-only "C# File") 
+Startup.cs
 
 ### Steps
 
