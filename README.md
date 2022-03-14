@@ -6,6 +6,21 @@
 
 A dependency module (derived from Autofac.Module) that discovers and registers all other dependency modules (derived from Autofac.Module).
 
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Releases](#releases)
+- [Autofac version](#autofac-version)
+- [Summary](#summary)
+- [Instructions](#instructions)
+  - [Usage option #1 - Use the default assembly registry](#usage-option--1---use-the-default-assembly-registry)
+  - [Usage option #2 - Use your custom assembly registry (interface + parameterless ctor)](#usage-option--2---use-your-custom-assembly-registry--interface---parameterless-ctor-)
+  - [Usage option #3 - Use your custom assembly registry (interface only)](#usage-option--3---use-your-custom-assembly-registry--interface-only-)
+  - [Usage option #4 - Use your custom assembly registry (it will be used through reflection)](#usage-option--4---use-your-custom-assembly-registry--it-will-be-used-through-reflection-)
+- [Examples](#examples)
+  - [Example output - .NET Framework 4.8](#example-output---net-framework-48)
+  - [Example output - .NET 6](#example-output---net-6)
+
 ## Introduction
 
 The motivation behind this project is to automatically discover and register all dependency modules in projects that are referenced by the startup project.
@@ -23,201 +38,40 @@ This package references Autofac **4.9.4** nuget package but in your project you 
 
 Tested with Autofac **6.3.0** nuget package.
 
-## Usage
+## Summary
 
-Suppose you have a Web API project that uses a couple of your own libraries.
+To use this solution you need to do 2 things.
 
-### Example solution
-
-![C# Class Library](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library") 
-![C# Class Library](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library") 
-YourCompany.YourProduct.ComponentA.csproj\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Dependencies](images/light/ReferenceGroup.png#gh-light-mode-only "Dependencies") 
-![Dependencies](images/dark/ReferenceGroup.png#gh-dark-mode-only "Dependencies") 
-Dependencies\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Packages](images/light/PackageReference.png#gh-light-mode-only "Packages") 
-![Packages](images/dark/PackageReference.png#gh-dark-mode-only "Packages") 
-Packages\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Package Reference](images/light/PackageReference.png#gh-light-mode-only "Package Reference") 
-![Package Reference](images/dark/PackageReference.png#gh-dark-mode-only "Package Reference") 
-Autofac (6.3.0)\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![C# file](images/light/CSFileNode.png#gh-light-mode-only "C# File") 
-![C# file](images/dark/CSFileNode.png#gh-dark-mode-only "C# File") 
-DependencyModule.cs `// registers ServiceA into Autofac.ContainerBuilder`\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![C# file](images/light/CSFileNode.png#gh-light-mode-only "C# File") 
-![C# file](images/dark/CSFileNode.png#gh-dark-mode-only "C# File") 
-ServiceA.cs
-
-![C# project](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library") 
-![C# project](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library") 
-YourCompany.YourProduct.ComponentB.csproj\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Dependencies](images/light/ReferenceGroup.png#gh-light-mode-only "Dependencies") 
-![Dependencies](images/dark/ReferenceGroup.png#gh-dark-mode-only "Dependencies") 
-Dependencies\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Packages](images/light/PackageReference.png#gh-light-mode-only "Packages") 
-![Packages](images/dark/PackageReference.png#gh-dark-mode-only "Packages") 
-Packages\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Package Reference](images/light/PackageReference.png#gh-light-mode-only "Package Reference") 
-![Package Reference](images/dark/PackageReference.png#gh-dark-mode-only "Package Reference") 
-Autofac (6.3.0)\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![C# file](images/light/CSFileNode.png#gh-light-mode-only "C# File") 
-![C# file](images/dark/CSFileNode.png#gh-dark-mode-only "C# File") 
-DependencyModule.cs `// registers ServiceB into Autofac.ContainerBuilder`\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![C# file](images/light/CSFileNode.png#gh-light-mode-only "C# File") 
-![C# file](images/dark/CSFileNode.png#gh-dark-mode-only "C# File") 
-ServiceB.cs
-
-![C# Web Application](images/light/CSWebApplication.png#gh-light-mode-only "C# Web Application") 
-![C# Web Application](images/dark/CSWebApplication.png#gh-dark-mode-only "C# Web Application") 
-YourCompany.YourProduct.WebApi.csproj\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Dependencies](images/light/ReferenceGroup.png#gh-light-mode-only "Dependencies") 
-![Dependencies](images/dark/ReferenceGroup.png#gh-dark-mode-only "Dependencies") 
-Dependencies\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Packages](images/light/PackageReference.png#gh-light-mode-only "Packages") 
-![Packages](images/dark/PackageReference.png#gh-dark-mode-only "Packages") 
-Packages\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Package Reference](images/light/PackageReference.png#gh-light-mode-only "Package Reference") 
-![Package Reference](images/dark/PackageReference.png#gh-dark-mode-only "Package Reference") 
-Autofac (6.3.0)\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Package Reference](images/light/PackageReference.png#gh-light-mode-only "Package Reference") 
-![Package Reference](images/dark/PackageReference.png#gh-dark-mode-only "Package Reference") 
-Autofac.Extensions.DependencyInjection (7.2.0)\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Package Reference](images/light/PackageReference.png#gh-light-mode-only "Package Reference") 
-![Package Reference](images/dark/PackageReference.png#gh-dark-mode-only "Package Reference") 
-EgonsoftHU.Extensions.DependencyInjection.Autofac (1.0.0)\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Projects](images/light/Application.png#gh-light-mode-only "Projects") 
-![Projects](images/dark/Application.png#gh-dark-mode-only "Projects") 
-Projects\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Project reference](images/light/Application.png#gh-light-mode-only "Project Reference") 
-![Project reference](images/dark/Application.png#gh-dark-mode-only "Project Reference") 
-YourCompany.YourProduct.ComponentA\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Project reference](images/light/Application.png#gh-light-mode-only "Project Reference") 
-![Project reference](images/dark/Application.png#gh-dark-mode-only "Project Reference") 
-YourCompany.YourProduct.ComponentB\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Folder](images/light/FolderOpened.png#gh-light-mode-only "Folder") 
-![Folder](images/dark/FolderOpened.png#gh-dark-mode-only "Folder") 
-Services\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![C# file](images/light/CSFileNode.png#gh-light-mode-only "C# File") 
-![C# file](images/dark/CSFileNode.png#gh-dark-mode-only "C# File") 
-DependencyModule.cs `// registers ServiceC into Autofac.ContainerBuilder`\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![C# file](images/light/CSFileNode.png#gh-light-mode-only "C# File") 
-![C# file](images/dark/CSFileNode.png#gh-dark-mode-only "C# File") 
-ServiceC.cs\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![C# file](images/light/CSFileNode.png#gh-light-mode-only "C# File") 
-![C# file](images/dark/CSFileNode.png#gh-dark-mode-only "C# File") 
-Program.cs\
-![Placeholder](images/light/Placeholder.png#gh-light-mode-only) 
-![Placeholder](images/dark/Placeholder.png#gh-dark-mode-only) 
-![C# file](images/light/CSFileNode.png#gh-light-mode-only "C# File") 
-![C# file](images/dark/CSFileNode.png#gh-dark-mode-only "C# File") 
-Startup.cs
-
-### Steps
-
-You have to do the below steps either in your **Program.cs** file or in your **Startup.cs** file.
-
-#### Step 1
-
-Configure an assembly registry. There is a default implementation you can use.
+***First***, configure an assembly registry. There is a default implementation you can use.
 
 The default implementation:
-- requires your assembly file name prefixes
+- requires your assembly file name prefixes, e.g. `YourPrefix`
 - will search for assembly files with the following pattern: `YourPrefix.*.dll`
 
-You can provide your own implementation:
-- implement this interface: `EgonsoftHU.Extensions.DependencyInjection.Autofac.IAssemblyRegistry`
-- initialize the instance either in the parameterless ctor or in a custom method.
+You can provide your own implementation. The required steps to implement:
+- **Initialization (ensure all relevant assemblies are loaded into the `AppDomain`)**  
+  *either* using the parameterless ctor  
+  *or* any other way that happens before configuring your implementation as the assembly registry
+- **Getting all assemblies**  
+  *either* implement this interface: `EgonsoftHU.Extensions.DependencyInjection.Autofac.IAssemblyRegistry`  
+  *or* provide a public parameterless instance method that can be called using reflection.  
+     e.g. `public IEnumerable<Assembly> GetAssemblies()`  
+     **Note:**
+     The method name must be `GetAssemblies`.
+     The return type can be any type that can be assigned to a variable of the `IEnumerable<Assembly>` type.
 
-#### Step 2
+***Finally***, register the module that will discover and register all other modules.
 
-Register the module that will discover and register all other modules.
+## Instructions
 
-### Example Program.cs
+**Note:** These instructions apply to *.NET Core 3.1 and newer* but there is an example for *.NET Framework* as well. See [Examples](#examples) section.
 
+***First***, install the *EgonsoftHU.Extensions.DependencyInjection.Autofac* [NuGet package](https://www.nuget.org/packages/EgonsoftHU.Extensions.DependencyInjection.Autofac).
+```
+dotnet add package EgonsoftHU.Extensions.DependencyInjection.Autofac
+```
+
+***Next***, add `ConfigureContainer<ContainerBuilder>()` to the Generic Host in `CreateHostBuilder()`.
 ```C#
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -230,42 +84,29 @@ namespace YourCompany.YourProduct.WebApi
     {
         // rest omitted for clarity
 
-        static IHost CreateHost(string[] args)
+        static IHostBuilder CreateHostBuilder(string[] args)
         {
             return
                 Host.CreateDefaultBuilder(args)
-                    .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                    .ConfigureContainer<ContainerBuilder>(
-                        builder =>
+                    .ConfigureWebHostDefaults(
+                        webHostBuilder =>
                         {
-                            // Step #1: Configure assembly registry - option #1
-                            // Use the default assembly registry.
-                            // Provide your assembly file name prefixes.
-                            AssemblyRegistryConfiguration.UseDefaultAssemblyRegistry(nameof(YourCompany));
-
-                            // Step #1: Configure assembly registry - option #2
-                            // The custom assembly registry must:
-                            // - implement this interface: EgonsoftHU.Extensions.DependencyInjection.Autofac.IAssemblyRegistry
-                            // - have a parameterless ctor that initializes the instance
-                            AssemblyRegistryConfiguration.UseAssemblyRegistry<YourCustomAssemblyRegistry>();
-
-                            // Step #1: Configure assembly registry - option #3
-                            // The custom assembly registry must:
-                            // - implement this interface: EgonsoftHU.Extensions.DependencyInjection.Autofac.IAssemblyRegistry
-                            IAssemblyRegistry assemblyRegistry = /* get an initialized instance of YourCustomAssemblyRegistry */
-                            AssemblyRegistryConfiguration.UseAssemblyRegistry(assemblyRegistry);
-
-                            // Step #2: Register the module that will discover and register all other modules.
-                            builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.Autofac.DependencyModule>();
+                            webHostBuilder.UseStartup<Startup>();
                         }
                     )
-                    .Build();
+                    .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                    .ConfigureContainer<ContainerBuilder>( // <-- Add this method call
+                        builder =>
+                        {
+                            // here comes the magic
+                        }
+                    );
         }
     }
 }
 ```
 
-### Example Startup.cs
+***Alternatively***, you can add `ConfigureContainer(ContainerBuilder builder)` to your `Startup.cs` file.
 
 ```C#
 using Autofac;
@@ -278,28 +119,110 @@ namespace YourCompany.YourProduct.WebApi
     {
         // rest omitted for clarity.
 
-        public void ConfigureContainer(ContainerBuilder builder)
+        public void ConfigureContainer(ContainerBuilder builder) // <-- Add this method
         {
-            // Step #1: Configure assembly registry - option #1
-            // Use the default assembly registry.
-            // Initialize your assembly file name prefixes.
-            AssemblyRegistryConfiguration.UseDefaultAssemblyRegistry(nameof(YourCompany));
-
-            // Step #1: Configure assembly registry - option #2
-            // The custom assembly registry must:
-            // - implement this interface: EgonsoftHU.Extensions.DependencyInjection.Autofac.IAssemblyRegistry
-            // - have a parameterless ctor that initializes the instance
-            AssemblyRegistryConfiguration.UseAssemblyRegistry<YourCustomAssemblyRegistry>();
-
-            // Step #1: Configure assembly registry - option #3
-            // The custom assembly registry must:
-            // - implement this interface: EgonsoftHU.Extensions.DependencyInjection.Autofac.IAssemblyRegistry
-            IAssemblyRegistry assemblyRegistry = /* get an initialized instance of YourCustomAssemblyRegistry */
-            AssemblyRegistryConfiguration.UseAssemblyRegistry(assemblyRegistry);
-
-            // Step #2: Register the module that will discover and register all other modules.
-            builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.Autofac.DependencyModule>();
+            // here comes the magic
         }
     }
+}
+```
+
+***Finally***, replace the `// here comes the magic` comment with one of the usage options.
+
+### Usage option #1 - Use the default assembly registry
+
+```C#
+/*
+ * Step #1: Configure assembly registry
+ *
+ * Use the default assembly registry.
+ * Provide your assembly file name prefixes.
+ */
+builder.UseDefaultAssemblyRegistry(nameof(YourCompany));
+
+// Step #2: Register the module that will discover and register all other modules.
+builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.Autofac.DependencyModule>();
+```
+
+### Usage option #2 - Use your custom assembly registry (interface + parameterless ctor)
+
+```C#
+/*
+ * Step #1: Configure assembly registry
+ *
+ * The custom assembly registry must:
+ * - implement this interface: EgonsoftHU.Extensions.DependencyInjection.Autofac.IAssemblyRegistry
+ * - have a parameterless ctor that initializes the instance
+ */
+builder.UseAssemblyRegistry<YourCustomAssemblyRegistry>();
+
+// Step #2: Register the module that will discover and register all other modules.
+builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.Autofac.DependencyModule>();
+```
+
+### Usage option #3 - Use your custom assembly registry (interface only)
+
+```C#
+/*
+ * Step #1: Configure assembly registry
+ *
+ * The custom assembly registry must:
+ * - implement this interface: EgonsoftHU.Extensions.DependencyInjection.Autofac.IAssemblyRegistry
+ */
+IAssemblyRegistry assemblyRegistry = /* get an initialized instance of YourCustomAssemblyRegistry */
+builder.UseAssemblyRegistry(assemblyRegistry);
+
+// Step #2: Register the module that will discover and register all other modules.
+builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.Autofac.DependencyModule>();
+```
+
+### Usage option #4 - Use your custom assembly registry (it will be used through reflection)
+
+```C#
+/*
+ * Step #1: Configure assembly registry
+ *
+ * The custom assembly registry must provide a public parameterless instance method:
+ * - Name: GetAssemblies
+ * - Return type: assignable to IEnumerable<Assembly>
+ */
+object assemblyRegistry = /* get an initialized instance of YourCustomAssemblyRegistry */
+builder.UseAssemblyRegistry(assemblyRegistry);
+
+// Step #2: Register the module that will discover and register all other modules.
+builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.Autofac.DependencyModule>();
+```
+
+## Examples
+
+Check out the [examples](src/examples) folder.  
+It contains an `Examples.sln` solution file with the following projects:
+
+|Project|Type|Target Framework|Description|
+|-|-|-|-|
+|`Company.Product.ComponentA`|![C# Class Library](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library")![C# Class Library](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library")|.NET&nbsp;Standard&nbsp;2.0|Contains `ServiceA` and a `DependencyModule` that registers it.|
+|`Company.Product.ComponentB`|![C# Class Library](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library")![C# Class Library](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library")|.NET&nbsp;Standard&nbsp;2.0|Contains `ServiceB` and a `DependencyModule` that registers it.|
+|`Company.Product.NetFx.WebApi`|![C# Web Application](images/light/CSWebApplication.png#gh-light-mode-only "C# Web Application")![C# Web Application](images/dark/CSWebApplication.png#gh-dark-mode-only "C# Web Application")|.NET&nbsp;Framework&nbsp;4.8|Uses `ServiceA` and `ServiceB` and also contains and uses `ServiceC` and a `DependencyModule` that registers it.|
+|`Company.Product.NetCore.WebApi`|![C# Web Application](images/light/CSWebApplication.png#gh-light-mode-only "C# Web Application")![C# Web Application](images/dark/CSWebApplication.png#gh-dark-mode-only "C# Web Application")|.NET&nbsp;6.0|Uses `ServiceA` and `ServiceB` and also contains and uses `ServiceC` and a `DependencyModule` that registers it.|
+
+### Example output - .NET Framework 4.8
+
+Navigating to `http://localhost:57939/api/tests` should display this result:
+```json
+{
+  "ServiceA": "Hello from Company.Product.ComponentA.ServiceA",
+  "ServiceB": "Hello from Company.Product.ComponentB.ServiceB",
+  "ServiceC": "Hello from Company.Product.NetFx.WebApi.Services.ServiceC"
+}
+```
+
+### Example output - .NET 6
+
+Navigating to `http://localhost:58286/api/tests` should display this result:
+```json
+{
+  "serviceA": "Hello from Company.Product.ComponentA.ServiceA",
+  "serviceB": "Hello from Company.Product.ComponentB.ServiceB",
+  "serviceC": "Hello from Company.Product.NetCore.WebApi.Services.ServiceC"
 }
 ```
