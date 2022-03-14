@@ -1,0 +1,15 @@
+﻿<!--
+Copyright © 2022 Gabor Csizmadia
+This code is licensed under MIT license (see LICENSE for details)
+-->
+<Project>
+
+  <PropertyGroup>
+    <EgonsoftHUAssemblyVersionTargetsFile>$(MSBuildThisFileDirectory)..\..\..\build\EgonsoftHU.AssemblyVersion.targets</EgonsoftHUAssemblyVersionTargetsFile>
+    <EgonsoftHUNuspecPropertiesTargetsFile>$(MSBuildThisFileDirectory)..\..\..\build\EgonsoftHU.NuspecProperties.targets</EgonsoftHUNuspecPropertiesTargetsFile>
+  </PropertyGroup>
+
+  <Import Project="$(EgonsoftHUAssemblyVersionTargetsFile)" Condition="Exists('$(EgonsoftHUAssemblyVersionTargetsFile)')" />
+  <Import Project="$(EgonsoftHUNuspecPropertiesTargetsFile)" Condition="Exists('$(EgonsoftHUNuspecPropertiesTargetsFile)')" />
+
+</Project>

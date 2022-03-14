@@ -1,0 +1,52 @@
+﻿<!--
+Copyright © 2022 Gabor Csizmadia
+This code is licensed under MIT license (see LICENSE for details)
+-->
+<Project>
+
+  <!-- Support for dotnet CLI commands -->
+  <PropertyGroup>
+    <SolutionDir>$(MSBuildThisFileDirectory)</SolutionDir>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyTrademarkAttribute>false</GenerateAssemblyTrademarkAttribute>
+    <GenerateAssemblyCultureAttribute>false</GenerateAssemblyCultureAttribute>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ApplicationManifest>$(SolutionDir)app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="$(SolutionDir)GlobalAssemblyInfo.cs" Link="Properties\GlobalAssemblyInfo.cs" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <RootNamespace>EgonsoftHU.Extensions.DependencyInjection.Autofac</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsNormalProject>true</IsNormalProject>
+    <IsNormalProject Condition="$(MSBuildProjectName.EndsWith('Tests'))">false</IsNormalProject>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateDocumentationFile>$(IsNormalProject)</GenerateDocumentationFile>
+    <!-- We can safely set it here as Csc task will set DocumentationFile property to empty if GenerateDocumentationFile is not true. -->
+    <DocumentationFile>obj\$(Configuration)\$(MSBuildProjectName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="$(IsNormalProject) And $(Configuration) == 'Release'">true</GeneratePackageOnBuild>
+    <PackageOutputPath>$(SolutionDir)..\nupkgs\</PackageOutputPath>
+    <PackageTags>EgonsoftHU egonsoft.hu egonsoft</PackageTags>
+  </PropertyGroup>
+
+</Project>
