@@ -195,19 +195,18 @@ builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.Autofac.Depende
 
 ## Examples
 
-Check out the [examples](src/examples) folder.  
-It contains an `Examples.sln` solution file with the following projects:
+Check out the `src/examples` folder that contains an `Examples.sln` solution file with the following projects:
 
-|Project|Type|Target Framework|Description|
-|-|-|-|-|
-|`Company.Product.ComponentA`|![C# Class Library](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library")![C# Class Library](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library")|.NET&nbsp;Standard&nbsp;2.0|Contains `ServiceA` and a `DependencyModule` that registers it.|
-|`Company.Product.ComponentB`|![C# Class Library](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library")![C# Class Library](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library")|.NET&nbsp;Standard&nbsp;2.0|Contains `ServiceB` and a `DependencyModule` that registers it.|
-|`Company.Product.NetFx.WebApi`|![C# Web Application](images/light/CSWebApplication.png#gh-light-mode-only "C# Web Application")![C# Web Application](images/dark/CSWebApplication.png#gh-dark-mode-only "C# Web Application")|.NET&nbsp;Framework&nbsp;4.8|Uses `ServiceA` and `ServiceB` and also contains and uses `ServiceC` and a `DependencyModule` that registers it.|
-|`Company.Product.NetCore.WebApi`|![C# Web Application](images/light/CSWebApplication.png#gh-light-mode-only "C# Web Application")![C# Web Application](images/dark/CSWebApplication.png#gh-dark-mode-only "C# Web Application")|.NET&nbsp;6.0|Uses `ServiceA` and `ServiceB` and also contains and uses `ServiceC` and a `DependencyModule` that registers it.|
+|Type|Project&nbsp;Name&nbsp;/&nbsp;Target&nbsp;Framework|Description|
+|:-:|-|-|-|
+|![C# Class Library](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library")![C# Class Library](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library")|`Company.Product.ComponentA`<br/>.NET&nbsp;Standard&nbsp;2.0|Contains `ServiceA` and a `DependencyModule` that registers it.|
+|![C# Class Library](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library")![C# Class Library](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library")|`Company.Product.ComponentB`<br/>.NET&nbsp;Standard&nbsp;2.0|Contains `ServiceB` and a `DependencyModule` that registers it.|
+|![C# Web Application](images/light/CSWebApplication.png#gh-light-mode-only "C# Web Application")![C# Web Application](images/dark/CSWebApplication.png#gh-dark-mode-only "C# Web Application")|`Company.Product.NetFx.WebApi`<br/>.NET&nbsp;Framework&nbsp;4.8|Uses `ServiceA` and `ServiceB` and also contains and uses `ServiceC` and a `DependencyModule` that registers it.|
+|![C# Web Application](images/light/CSWebApplication.png#gh-light-mode-only "C# Web Application")![C# Web Application](images/dark/CSWebApplication.png#gh-dark-mode-only "C# Web Application")|`Company.Product.NetCore.WebApi`<br/>.NET&nbsp;6.0|Uses `ServiceA` and `ServiceB` and also contains and uses `ServiceC` and a `DependencyModule` that registers it.|
 
 ### Example output - .NET Framework 4.8
 
-Navigating to `http://localhost:57939/api/tests` should display this result:
+Navigating to the `~/api/tests` API endpoint should display this result:
 ```json
 {
   "ServiceA": "Hello from Company.Product.ComponentA.ServiceA",
@@ -218,7 +217,7 @@ Navigating to `http://localhost:57939/api/tests` should display this result:
 
 ### Example output - .NET 6
 
-Navigating to `http://localhost:58286/api/tests` should display this result:
+Navigating to the `~/api/tests` API endpoint should display this result:
 ```json
 {
   "serviceA": "Hello from Company.Product.ComponentA.ServiceA",
