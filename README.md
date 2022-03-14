@@ -198,7 +198,7 @@ builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.Autofac.Depende
 Check out the `src/examples` folder that contains an `Examples.sln` solution file with the following projects:
 
 |Type|Project&nbsp;Name&nbsp;/&nbsp;Target&nbsp;Framework|Description|
-|:-:|-|-|-|
+|:-:|-|-|
 |![C# Class Library](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library")![C# Class Library](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library")|`Company.Product.ComponentA`<br/>.NET&nbsp;Standard&nbsp;2.0|Contains `ServiceA` and a `DependencyModule` that registers it.|
 |![C# Class Library](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library")![C# Class Library](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library")|`Company.Product.ComponentB`<br/>.NET&nbsp;Standard&nbsp;2.0|Contains `ServiceB` and a `DependencyModule` that registers it.|
 |![C# Web Application](images/light/CSWebApplication.png#gh-light-mode-only "C# Web Application")![C# Web Application](images/dark/CSWebApplication.png#gh-dark-mode-only "C# Web Application")|`Company.Product.NetFx.WebApi`<br/>.NET&nbsp;Framework&nbsp;4.8|Uses `ServiceA` and `ServiceB` and also contains and uses `ServiceC` and a `DependencyModule` that registers it.|
