@@ -13,6 +13,8 @@ A dependency module (derived from Autofac.Module) that discovers and registers a
 - [Autofac version](#autofac-version)
 - [Summary](#summary)
 - [Instructions](#instructions)
+  - [Instructions for .NET Core 3.1 / .NET 5 / .NET 6](#instructions-for-net-core-31---net-5---net-6)
+  - [Instructions for .NET Framework 4.6.1+](#instructions-for-net-framework-461-)
   - [Usage option #1 - Use the default assembly registry](#usage-option--1---use-the-default-assembly-registry)
   - [Usage option #2 - Use your custom assembly registry (interface + parameterless ctor)](#usage-option--2---use-your-custom-assembly-registry--interface---parameterless-ctor-)
   - [Usage option #3 - Use your custom assembly registry (interface only)](#usage-option--3---use-your-custom-assembly-registry--interface-only-)
@@ -64,7 +66,10 @@ You can provide your own implementation. The required steps to implement:
 
 ## Instructions
 
-**Note:** These instructions apply to *.NET Core 3.1 and newer* but there is an example for *.NET Framework* as well. See [Examples](#examples) section.
+The usage options are the same for both .NET Framework and .NET Core 3.1 / .NET 5 / .NET 6.
+The difference is where the magic happens.
+
+### Instructions for .NET Core 3.1 / .NET 5 / .NET 6
 
 ***First***, install the *EgonsoftHU.Extensions.DependencyInjection.Autofac* [NuGet package](https://www.nuget.org/packages/EgonsoftHU.Extensions.DependencyInjection.Autofac).
 ```
@@ -128,6 +133,23 @@ namespace YourCompany.YourProduct.WebApi
 ```
 
 ***Finally***, replace the `// here comes the magic` comment with one of the usage options.
+
+### Instructions for .NET Framework 4.6.1+
+
+***First***, in the Package Manager Console install the *EgonsoftHU.Extensions.DependencyInjection.Autofac* [NuGet package](https://www.nuget.org/packages/EgonsoftHU.Extensions.DependencyInjection.Autofac).
+```pwsh
+Install-Package EgonsoftHU.Extensions.DependencyInjection.Autofac
+```
+
+***Then***, locate where you create Autofac's `ContainerBuilder`.
+
+***Then***, choose one of the usage options below.
+
+***Finally***, add the required code right after the creation of `ContainerBuilder`.
+
+**Note:** You can find an example in the `Company.Product.NetFx.WebApi` project.
+Check out the [`WebApiConfig.Extensions.Autofac.cs`](src/examples/Company.Product.NetFx.WebApi/App_Start/WebApiConfig.Extensions.Autofac.cs) file.
+It contains configuring Autofac as the ASP.NET dependency resolver and also the [usage option #1](#usage-option--1---use-the-default-assembly-registry).
 
 ### Usage option #1 - Use the default assembly registry
 
