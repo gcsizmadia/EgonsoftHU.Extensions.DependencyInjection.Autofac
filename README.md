@@ -148,7 +148,7 @@ Install-Package EgonsoftHU.Extensions.DependencyInjection.Autofac
 ***Finally***, add the required code right after the creation of `ContainerBuilder`.
 
 **Note:** You can find an example in the `Company.Product.NetFx.WebApi` project.
-Check out the [`WebApiConfig.Extensions.Autofac.cs`](src/examples/Company.Product.NetFx.WebApi/App_Start/WebApiConfig.Extensions.Autofac.cs) file.
+Check out the [`WebApiConfig.Extensions.Autofac.cs`](examples/Company.Product.NetFx.WebApi/App_Start/WebApiConfig.Extensions.Autofac.cs) file.
 It contains configuring Autofac as the ASP.NET dependency resolver and also the [usage option #1](#usage-option--1---use-the-default-assembly-registry).
 
 ### Usage option #1 - Use the default assembly registry
@@ -217,7 +217,7 @@ builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.Autofac.Depende
 
 ## Examples
 
-Check out the `src/examples` folder that contains an `Examples.sln` solution file with the following projects:
+Check out the `examples` folder that contains an `Examples.sln` solution file with the following projects:
 
 |Type|Project&nbsp;Name&nbsp;/&nbsp;Target&nbsp;Framework|Description|
 |:-:|-|-|
