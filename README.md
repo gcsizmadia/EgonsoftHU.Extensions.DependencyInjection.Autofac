@@ -1,46 +1,106 @@
-# Egonsoft.HU DependencyInjection Extensions for Autofac
+# Egonsoft.HU DependencyInjection Extensions
 
 [![GitHub](https://img.shields.io/github/license/gcsizmadia/EgonsoftHU.Extensions.DependencyInjection.Autofac?label=License)](https://opensource.org/licenses/MIT)
+
+Extensions for Autofac and Microsoft.Extensions.DependencyInjection
+
+## Table of Contents
+
+- [Table of Contents](#table-of-contents)
+- [Egonsoft.HU DependencyInjection Extensions Abstractions](#egonsofthu-dependencyinjection-extensions-abstractions)
+  - [Introduction](#introduction)
+  - [Releases](#releases)
+  - [Instructions](#instructions)
+- [Egonsoft.HU DependencyInjection Extensions for Autofac](#egonsofthu-dependencyinjection-extensions-for-autofac)
+  - [Introduction](#introduction-1)
+  - [Releases](#releases-1)
+  - [Autofac version](#autofac-version)
+  - [Summary](#summary)
+  - [Instructions](#instructions-1)
+    - [Instructions for .NET Core 3.1 / .NET 5 / .NET 6](#instructions-for-net-core-31---net-5---net-6)
+    - [Instructions for .NET Framework 4.6.1+](#instructions-for-net-framework-461-)
+    - [Usage option #1 - Use the default assembly registry](#usage-option--1---use-the-default-assembly-registry)
+    - [Usage option #2 - Use your custom assembly registry (interface + parameterless ctor)](#usage-option--2---use-your-custom-assembly-registry--interface---parameterless-ctor-)
+    - [Usage option #3 - Use your custom assembly registry (interface only)](#usage-option--3---use-your-custom-assembly-registry--interface-only-)
+    - [Usage option #4 - Use your custom assembly registry (it will be used through reflection)](#usage-option--4---use-your-custom-assembly-registry--it-will-be-used-through-reflection-)
+- [Examples](#examples)
+  - [Example output - .NET Framework 4.8](#example-output---net-framework-48)
+  - [Example output - .NET 6](#example-output---net-6)
+
+## Egonsoft.HU DependencyInjection Extensions Abstractions
+
+[![Nuget](https://img.shields.io/nuget/v/EgonsoftHU.Extensions.DependencyInjection.Abstractions?label=NuGet)](https://www.nuget.org/packages/EgonsoftHU.Extensions.DependencyInjection.Abstractions)
+[![Nuget](https://img.shields.io/nuget/dt/EgonsoftHU.Extensions.DependencyInjection.Abstractions?label=Downloads)](https://www.nuget.org/packages/EgonsoftHU.Extensions.DependencyInjection.Abstractions)
+
+Abstractions for dependency injection.
+
+Commonly Used Types:
+- `EgonsoftHU.Extensions.DependencyInjection.IAssemblyRegistry`
+- `EgonsoftHU.Extensions.DependencyInjection.DefaultAssemblyRegistry`
+
+### Introduction
+
+The motivation behind this project is to automatically discover and load all _relevant_ assemblies into the current `AppDomain`.
+
+### Releases
+
+You can download the package from [nuget.org](https://www.nuget.org/).
+- [EgonsoftHU.Extensions.DependencyInjection.Abstractions](https://www.nuget.org/packages/EgonsoftHU.Extensions.DependencyInjection.Abstractions)
+
+You can find the release notes [here](https://github.com/gcsizmadia/EgonsoftHU.Extensions.DependencyInjection.Autofac/releases).
+
+### Instructions
+
+***First***, install the *EgonsoftHU.Extensions.DependencyInjection.Abstractions* [NuGet package](https://www.nuget.org/packages/EgonsoftHU.Extensions.DependencyInjection.Abstractions).
+```
+dotnet add package EgonsoftHU.Extensions.DependencyInjection.Abstractions
+```
+
+Note: if you will use the Autofac extension below then this step can be ignored.
+
+***Then***, you can create an instance of the `DefaultAssemblyRegistry` class by providing the file name prefixes of your assemblies.
+
+```C#
+// This will search for assemblies as below then loads them into the current AppDomain:
+//     Root Folder : AppContext.BaseDirectory
+//     Pattern #1  : YourCompany.*.dll
+//     Pattern #2  : Custom.*.dll
+//     SearchOption: SearchOption.AllDirectories
+
+var assemblyRegistry = new DefaultAssemblyRegistry("YourCompany", "Custom");
+```
+
+***Finally***, if you need the loaded assemblies then get the current instance of the `DefaultAssemblyRegistry` class.
+
+```C#
+var assemblies = DefaultAssemblyRegistry.Current.GetAssemblies();
+```
+
+## Egonsoft.HU DependencyInjection Extensions for Autofac
+
 [![Nuget](https://img.shields.io/nuget/v/EgonsoftHU.Extensions.DependencyInjection.Autofac?label=NuGet)](https://www.nuget.org/packages/EgonsoftHU.Extensions.DependencyInjection.Autofac)
 [![Nuget](https://img.shields.io/nuget/dt/EgonsoftHU.Extensions.DependencyInjection.Autofac?label=Downloads)](https://www.nuget.org/packages/EgonsoftHU.Extensions.DependencyInjection.Autofac)
 
 A dependency module (derived from Autofac.Module) that discovers and registers all other dependency modules (derived from Autofac.Module).
 
-## Table of Contents
-
-- [Introduction](#introduction)
-- [Releases](#releases)
-- [Autofac version](#autofac-version)
-- [Summary](#summary)
-- [Instructions](#instructions)
-  - [Instructions for .NET Core 3.1 / .NET 5 / .NET 6](#instructions-for-net-core-31---net-5---net-6)
-  - [Instructions for .NET Framework 4.6.1+](#instructions-for-net-framework-461-)
-  - [Usage option #1 - Use the default assembly registry](#usage-option--1---use-the-default-assembly-registry)
-  - [Usage option #2 - Use your custom assembly registry (interface + parameterless ctor)](#usage-option--2---use-your-custom-assembly-registry--interface---parameterless-ctor-)
-  - [Usage option #3 - Use your custom assembly registry (interface only)](#usage-option--3---use-your-custom-assembly-registry--interface-only-)
-  - [Usage option #4 - Use your custom assembly registry (it will be used through reflection)](#usage-option--4---use-your-custom-assembly-registry--it-will-be-used-through-reflection-)
-- [Examples](#examples)
-  - [Example output - .NET Framework 4.8](#example-output---net-framework-48)
-  - [Example output - .NET 6](#example-output---net-6)
-
-## Introduction
+### Introduction
 
 The motivation behind this project is to automatically discover and register all dependency modules in projects that are referenced by the startup project.
 
-## Releases
+### Releases
 
 You can download the package from [nuget.org](https://www.nuget.org/).
 - [EgonsoftHU.Extensions.DependencyInjection.Autofac](https://www.nuget.org/packages/EgonsoftHU.Extensions.DependencyInjection.Autofac)
 
 You can find the release notes [here](https://github.com/gcsizmadia/EgonsoftHU.Extensions.DependencyInjection.Autofac/releases).
 
-## Autofac version
+### Autofac version
 
 This package references Autofac **4.9.4** nuget package but in your project you can use a newer version of Autofac.
 
 Tested with Autofac **6.3.0** nuget package.
 
-## Summary
+### Summary
 
 To use this solution you need to do 2 things.
 
@@ -64,12 +124,12 @@ You can provide your own implementation. The required steps to implement:
 
 ***Finally***, register the module that will discover and register all other modules.
 
-## Instructions
+### Instructions
 
 The usage options are the same for both .NET Framework and .NET Core 3.1 / .NET 5 / .NET 6.
 The difference is where the magic happens.
 
-### Instructions for .NET Core 3.1 / .NET 5 / .NET 6
+#### Instructions for .NET Core 3.1 / .NET 5 / .NET 6
 
 ***First***, install the *EgonsoftHU.Extensions.DependencyInjection.Autofac* [NuGet package](https://www.nuget.org/packages/EgonsoftHU.Extensions.DependencyInjection.Autofac).
 ```
@@ -134,7 +194,7 @@ namespace YourCompany.YourProduct.WebApi
 
 ***Finally***, replace the `// here comes the magic` comment with one of the usage options.
 
-### Instructions for .NET Framework 4.6.1+
+#### Instructions for .NET Framework 4.6.1+
 
 ***First***, in the Package Manager Console install the *EgonsoftHU.Extensions.DependencyInjection.Autofac* [NuGet package](https://www.nuget.org/packages/EgonsoftHU.Extensions.DependencyInjection.Autofac).
 ```pwsh
@@ -151,7 +211,7 @@ Install-Package EgonsoftHU.Extensions.DependencyInjection.Autofac
 Check out the [`WebApiConfig.Extensions.Autofac.cs`](examples/Company.Product.NetFx.WebApi/App_Start/WebApiConfig.Extensions.Autofac.cs) file.
 It contains configuring Autofac as the ASP.NET dependency resolver and also the [usage option #1](#usage-option--1---use-the-default-assembly-registry).
 
-### Usage option #1 - Use the default assembly registry
+#### Usage option #1 - Use the default assembly registry
 
 ```C#
 /*
@@ -166,7 +226,7 @@ builder.UseDefaultAssemblyRegistry(nameof(YourCompany));
 builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.Autofac.DependencyModule>();
 ```
 
-### Usage option #2 - Use your custom assembly registry (interface + parameterless ctor)
+#### Usage option #2 - Use your custom assembly registry (interface + parameterless ctor)
 
 ```C#
 /*
@@ -182,7 +242,7 @@ builder.UseAssemblyRegistry<YourCustomAssemblyRegistry>();
 builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.Autofac.DependencyModule>();
 ```
 
-### Usage option #3 - Use your custom assembly registry (interface only)
+#### Usage option #3 - Use your custom assembly registry (interface only)
 
 ```C#
 /*
@@ -198,7 +258,7 @@ builder.UseAssemblyRegistry(assemblyRegistry);
 builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.Autofac.DependencyModule>();
 ```
 
-### Usage option #4 - Use your custom assembly registry (it will be used through reflection)
+#### Usage option #4 - Use your custom assembly registry (it will be used through reflection)
 
 ```C#
 /*
@@ -233,7 +293,12 @@ Navigating to the `~/api/tests` API endpoint should display this result:
 {
   "ServiceA": "Hello from Company.Product.ComponentA.ServiceA",
   "ServiceB": "Hello from Company.Product.ComponentB.ServiceB",
-  "ServiceC": "Hello from Company.Product.NetFx.WebApi.Services.ServiceC"
+  "ServiceC": "Hello from Company.Product.NetFx.WebApi.Services.ServiceC",
+  "Assemblies": [
+    "Company.Product.ComponentA, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "Company.Product.ComponentB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "Company.Product.NetFx.WebApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+  ]
 }
 ```
 
@@ -244,6 +309,11 @@ Navigating to the `~/api/tests` API endpoint should display this result:
 {
   "serviceA": "Hello from Company.Product.ComponentA.ServiceA",
   "serviceB": "Hello from Company.Product.ComponentB.ServiceB",
-  "serviceC": "Hello from Company.Product.NetCore.WebApi.Services.ServiceC"
+  "serviceC": "Hello from Company.Product.NetCore.WebApi.Services.ServiceC",
+  "assemblies": [
+    "Company.Product.ComponentA, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "Company.Product.ComponentB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "Company.Product.NetCore.WebApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+  ]
 }
 ```
