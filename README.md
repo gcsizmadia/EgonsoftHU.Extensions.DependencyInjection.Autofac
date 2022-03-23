@@ -2,15 +2,15 @@
 
 [![GitHub](https://img.shields.io/github/license/gcsizmadia/EgonsoftHU.Extensions.DependencyInjection.Autofac?label=License)](https://opensource.org/licenses/MIT)
 
-Extensions for Autofac and Microsoft.Extensions.DependencyInjection
+Extensions for dependency injection.
 
 ## Table of Contents
 
-- [Table of Contents](#table-of-contents)
 - [Egonsoft.HU DependencyInjection Extensions Abstractions](#egonsofthu-dependencyinjection-extensions-abstractions)
   - [Introduction](#introduction)
   - [Releases](#releases)
   - [Instructions](#instructions)
+  - [Example](#example)
 - [Egonsoft.HU DependencyInjection Extensions for Autofac](#egonsofthu-dependencyinjection-extensions-for-autofac)
   - [Introduction](#introduction-1)
   - [Releases](#releases-1)
@@ -74,6 +74,59 @@ var assemblyRegistry = new DefaultAssemblyRegistry("YourCompany", "Custom");
 
 ```C#
 var assemblies = DefaultAssemblyRegistry.Current.GetAssemblies();
+```
+
+### Example
+
+Suppose you have an ASP.NET Core project that needs to load controllers from other projects.
+
+Let's create an extension method that will do the magic.
+
+```C#
+using System.Reflection;
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+
+public static class MvcBuilderExtensions
+{
+    public static IMvcBuilder AddApplicationParts(this IMvcBuilder builder)
+    {
+        // This is the assembly of your ASP.NET Core startup project.
+        // We will not call the AddApplicationPart() method for this assembly.
+        Assembly entryAssembly = Assembly.GetEntryAssembly();
+
+        DefaultAssemblyRegistry
+            .Current
+            .GetAssemblies()
+            .Where(
+                assembly =>
+                assembly != entryAssembly
+                &&
+                assembly.DefinedTypes.Any(typeInfo => typeof(ControllerBase).IsAssignableFrom(typeInfo))
+            )
+            .ToList()
+            .ForEach(assembly => builder.AddApplicationPart(assembly));
+
+        return builder;
+    }
+}
+```
+
+Now you can use it in your `Startup.cs` file.
+
+```C#
+using Microsoft.Extensions.DependencyInjection;
+
+public void ConfigureServices(IServiceCollection services)
+{
+    // Let's initialize the assembly registry.
+    var assemblyRegistry = new DefaultAssemblyRegistry("YourCompany", "Custom");
+
+    services
+        .AddMvc()
+        .AddApplicationParts(); // <-- This will load controllers, view components, or tag helpers from all assemblies other than the entry assembly.
+}
 ```
 
 ## Egonsoft.HU DependencyInjection Extensions for Autofac
