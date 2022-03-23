@@ -1,11 +1,14 @@
 ﻿// Copyright © 2022 Gabor Csizmadia
 // This code is licensed under MIT license (see LICENSE for details)
 
+using System.Linq;
 using System.Web.Http;
 
 using Company.Product.ComponentA;
 using Company.Product.ComponentB;
 using Company.Product.NetFx.WebApi.Services;
+
+using EgonsoftHU.Extensions.DependencyInjection;
 
 namespace Company.Product.NetFx.WebApi.Controllers
 {
@@ -45,7 +48,13 @@ namespace Company.Product.NetFx.WebApi.Controllers
                     {
                         ServiceA = serviceA.GetMessage(),
                         ServiceB = serviceB.GetMessage(),
-                        ServiceC = serviceC.GetMessage()
+                        ServiceC = serviceC.GetMessage(),
+                        Assemblies =
+                            DefaultAssemblyRegistry
+                                .Current
+                                .GetAssemblies()
+                                .Select(assembly => assembly.GetName().FullName)
+                                .ToList()
                     }
                 );
         }

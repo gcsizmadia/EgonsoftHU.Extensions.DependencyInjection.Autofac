@@ -1,9 +1,13 @@
 ﻿// Copyright © 2022 Gabor Csizmadia
 // This code is licensed under MIT license (see LICENSE for details)
 
+using System.Linq;
+
 using Company.Product.ComponentA;
 using Company.Product.ComponentB;
 using Company.Product.NetCore.WebApi.Services;
+
+using EgonsoftHU.Extensions.DependencyInjection;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,7 +50,13 @@ namespace Company.Product.NetCore.WebApi.Controllers
                     {
                         ServiceA = serviceA.GetMessage(),
                         ServiceB = serviceB.GetMessage(),
-                        ServiceC = serviceC.GetMessage()
+                        ServiceC = serviceC.GetMessage(),
+                        Assemblies =
+                            DefaultAssemblyRegistry
+                                .Current
+                                .GetAssemblies()
+                                .Select(assembly => assembly.GetName().FullName)
+                                .ToList()
                     }
                 );
         }
