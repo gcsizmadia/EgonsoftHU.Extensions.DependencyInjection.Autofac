@@ -4,7 +4,7 @@
 using System;
 using System.Reflection;
 
-namespace EgonsoftHU.Extensions.DependencyInjection.Autofac
+namespace EgonsoftHU.Extensions.DependencyInjection
 {
     internal class AssemblyRegistryEntry : IComparable<AssemblyRegistryEntry>, IComparable
     {

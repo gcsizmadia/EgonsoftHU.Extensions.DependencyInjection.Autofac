@@ -1,16 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>EgonsoftHU.Extensions.DependencyInjection</RootNamespace>
   </PropertyGroup>
   <PropertyGroup>
-    <PackageId>EgonsoftHU.Extensions.DependencyInjection.Autofac</PackageId>
-    <VersionPrefix>1.0.1</VersionPrefix>
+    <PackageId>EgonsoftHU.Extensions.DependencyInjection.Abstractions</PackageId>
+    <VersionPrefix>1.0.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
     <Authors>Gabor Csizmadia</Authors>
     <Owners>Egonsoft.HU</Owners>
-    <Title>Egonsoft.HU DependencyInjection Extensions for Autofac</Title>
-    <Description>A dependency module (derived from Autofac.Module) that discovers and registers all other dependency modules (derived from Autofac.Module).</Description>
-    <Summary>A dependency module (derived from Autofac.Module) that discovers and registers all other dependency modules (derived from Autofac.Module).</Summary>
+    <Title>Egonsoft.HU DependencyInjection Extensions Abstractions</Title>
+    <Description>Abstractions for dependency injection.
+
+Commonly Used Types:
+EgonsoftHU.Extensions.DependencyInjection.IAssemblyRegistry
+EgonsoftHU.Extensions.DependencyInjection.DefaultAssemblyRegistry</Description>
+    <Summary>Abstractions for dependency injection.
+    
+Commonly Used Types:
+EgonsoftHU.Extensions.DependencyInjection.IAssemblyRegistry
+EgonsoftHU.Extensions.DependencyInjection.DefaultAssemblyRegistry</Summary>
     <Copyright>Copyright © 2022 Gabor Csizmadia</Copyright>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -20,7 +29,7 @@
     <PackageIconUrl></PackageIconUrl>
     <PackageReadmeFile></PackageReadmeFile>
     -->
-    <PackageTags>$(PackageTags) extensions extension dependencyinjection di ioc autofac module</PackageTags>
+    <PackageTags>$(PackageTags) extensions extension dependencyinjection di ioc assembly registry</PackageTags>
     <PackageReleaseNotes>Please visit https://github.com/gcsizmadia/EgonsoftHU.Extensions.DependencyInjection.Autofac/releases to view the release notes.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/gcsizmadia/EgonsoftHU.Extensions.DependencyInjection.Autofac.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -33,8 +42,9 @@
     <MinClientVersion>2.8</MinClientVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.9.4" />
     <PackageReference Include="EgonsoftHU.Extensions.Bcl" Version="1.0.2" />
-    <PackageReference Include="EgonsoftHU.Extensions.DependencyInjection.Abstractions" Version="1.0.0" />
+    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
+    <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
   </ItemGroup>
 </Project>

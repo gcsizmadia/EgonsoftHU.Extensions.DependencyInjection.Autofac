@@ -11,11 +11,16 @@ using EgonsoftHU.Extensions.Bcl;
 
 using Serilog;
 
-namespace EgonsoftHU.Extensions.DependencyInjection.Autofac
+namespace EgonsoftHU.Extensions.DependencyInjection
 {
-    internal class DefaultAssemblyRegistry : IAssemblyRegistry
+    /// <summary>
+    /// Default implementation of the <see cref="IAssemblyRegistry"/> interface.
+    /// </summary>
+    public class DefaultAssemblyRegistry : IAssemblyRegistry
     {
         private static readonly string[] separator = new[] { ", " };
+
+        private static IAssemblyRegistry current;
 
         private readonly ILogger logger = LoggingHelper.GetLogger<DefaultAssemblyRegistry>();
 
@@ -23,8 +28,14 @@ namespace EgonsoftHU.Extensions.DependencyInjection.Autofac
 
         private readonly IReadOnlyCollection<string> assemblyFileNamePrefixes;
 
-        internal DefaultAssemblyRegistry(params string[] assemblyFileNamePrefixes)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultAssemblyRegistry"/> class with the specified assembly file name prefixes.
+        /// </summary>
+        /// <param name="assemblyFileNamePrefixes">The prefixes of the assembly file names.</param>
+        public DefaultAssemblyRegistry(params string[] assemblyFileNamePrefixes)
         {
+            current = this;
+
             this.assemblyFileNamePrefixes = new List<string>(assemblyFileNamePrefixes).AsReadOnly();
 
             AppDomain
@@ -40,6 +51,11 @@ namespace EgonsoftHU.Extensions.DependencyInjection.Autofac
 
             LoadAssemblies();
         }
+
+        /// <summary>
+        /// Gets the current instance of the <see cref="DefaultAssemblyRegistry"/> class.
+        /// </summary>
+        public static IAssemblyRegistry Current => current;
 
         /// <inheritdoc/>
         public IEnumerable<Assembly> GetAssemblies()

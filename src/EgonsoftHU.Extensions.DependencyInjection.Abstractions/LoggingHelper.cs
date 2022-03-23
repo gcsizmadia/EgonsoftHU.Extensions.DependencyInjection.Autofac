@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using Serilog;
 using Serilog.Core;
 
-namespace EgonsoftHU.Extensions.DependencyInjection.Autofac
+namespace EgonsoftHU.Extensions.DependencyInjection
 {
     internal static class LoggingHelper
     {

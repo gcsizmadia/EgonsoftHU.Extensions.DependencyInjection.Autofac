@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace EgonsoftHU.Extensions.DependencyInjection.Autofac
+namespace EgonsoftHU.Extensions.DependencyInjection
 {
     /// <summary>
     /// Defines a mechanism for retrieving all assemblies loaded into the current application domain.
