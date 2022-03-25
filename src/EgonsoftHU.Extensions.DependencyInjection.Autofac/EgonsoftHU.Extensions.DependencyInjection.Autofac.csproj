@@ -4,7 +4,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <PackageId>EgonsoftHU.Extensions.DependencyInjection.Autofac</PackageId>
-    <VersionPrefix>1.0.1</VersionPrefix>
+    <VersionPrefix>1.0.2</VersionPrefix>
     <VersionSuffix></VersionSuffix>
     <Authors>Gabor Csizmadia</Authors>
     <Owners>Egonsoft.HU</Owners>
