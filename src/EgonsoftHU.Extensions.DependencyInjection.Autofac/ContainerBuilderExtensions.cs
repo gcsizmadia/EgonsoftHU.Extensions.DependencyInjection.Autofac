@@ -99,7 +99,7 @@ namespace EgonsoftHU.Extensions.DependencyInjection.Autofac
         public static void UseDefaultAssemblyRegistry(this ContainerBuilder _, params string[] assemblyFileNamePrefixes)
         {
             SetConfiguredOrThrow();
-            DependencyModule.AssemblyRegistryTypedInstance = new DefaultAssemblyRegistry(assemblyFileNamePrefixes);
+            DependencyModule.AssemblyRegistryTypedInstance = DefaultAssemblyRegistry.Initialize(assemblyFileNamePrefixes);
         }
 
         private static void SetConfiguredOrThrow()
