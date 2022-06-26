@@ -16,10 +16,10 @@ namespace EgonsoftHU.Extensions.DependencyInjection.Autofac
     /// </summary>
     public class DependencyModule : Module
     {
-        internal static IAssemblyRegistry AssemblyRegistryTypedInstance;
+        internal static IAssemblyRegistry? AssemblyRegistryTypedInstance;
 
-        internal static object AssemblyRegistryCustomInstance;
-        internal static MethodInfo GetAssembliesMethod;
+        internal static object? AssemblyRegistryCustomInstance;
+        internal static MethodInfo? GetAssembliesMethod;
 
         /// <inheritdoc/>
         protected override void Load(ContainerBuilder builder)
