@@ -3,22 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EgonsoftHU.Extensions.DependencyInjection.Autofac", "EgonsoftHU.Extensions.DependencyInjection.Autofac\EgonsoftHU.Extensions.DependencyInjection.Autofac.csproj", "{5B8FEA6C-4172-4272-B59C-4D8CF20B0ACA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EgonsoftHU.Extensions.DependencyInjection.Autofac", "src\EgonsoftHU.Extensions.DependencyInjection.Autofac\EgonsoftHU.Extensions.DependencyInjection.Autofac.csproj", "{5B8FEA6C-4172-4272-B59C-4D8CF20B0ACA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{92F65356-6903-41EF-B1C3-76DAA09977D2}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		..\.gitignore = ..\.gitignore
-		app.manifest = app.manifest
+		.gitignore = .gitignore
+		src\app.manifest = src\app.manifest
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
-		GlobalAssemblyInfo.cs = GlobalAssemblyInfo.cs
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{98AAC7F7-CEE2-48F7-B859-5DD54451F047}"
 	ProjectSection(SolutionItems) = preProject
-		..\LICENSE = ..\LICENSE
-		..\README.md = ..\README.md
+		LICENSE = LICENSE
+		README.md = README.md
 	EndProjectSection
 EndProject
 Global
