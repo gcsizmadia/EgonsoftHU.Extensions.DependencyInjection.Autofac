@@ -11,7 +11,9 @@
     <Title>Egonsoft.HU DependencyInjection Extensions for Autofac</Title>
     <Description>A dependency module (derived from Autofac.Module) that discovers and registers all other dependency modules (derived from Autofac.Module).</Description>
     <Summary>A dependency module (derived from Autofac.Module) that discovers and registers all other dependency modules (derived from Autofac.Module).</Summary>
-    <Copyright>Copyright © 2022 Gabor Csizmadia</Copyright>
+    <!--
+    <Copyright></Copyright>
+    -->
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/gcsizmadia/EgonsoftHU.Extensions.DependencyInjection.Autofac</PackageProjectUrl>
@@ -30,7 +32,7 @@
     -->
     <PackageType>Dependency</PackageType>
     <DevelopmentDependency>false</DevelopmentDependency>
-    <MinClientVersion>2.8</MinClientVersion>
+    <MinClientVersion>4.1.0</MinClientVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.9.4" />
