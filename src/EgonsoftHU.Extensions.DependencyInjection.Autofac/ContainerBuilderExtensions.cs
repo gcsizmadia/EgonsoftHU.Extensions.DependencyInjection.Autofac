@@ -27,7 +27,7 @@ namespace EgonsoftHU.Extensions.DependencyInjection.Autofac
         public static void UseAssemblyRegistry(this ContainerBuilder _, object assemblyRegistry)
         {
             SetConfiguredOrThrow();
-            assemblyRegistry.ThrowIfNull(nameof(assemblyRegistry));
+            assemblyRegistry.ThrowIfNull();
 
             DependencyModule.AssemblyRegistryCustomInstance = assemblyRegistry;
 
@@ -77,7 +77,7 @@ namespace EgonsoftHU.Extensions.DependencyInjection.Autofac
         public static void UseAssemblyRegistry(this ContainerBuilder _, IAssemblyRegistry assemblyRegistry)
         {
             SetConfiguredOrThrow();
-            assemblyRegistry.ThrowIfNull(nameof(assemblyRegistry));
+            assemblyRegistry.ThrowIfNull();
 
             DependencyModule.AssemblyRegistryTypedInstance = assemblyRegistry;
         }
