@@ -5,11 +5,22 @@ This code is licensed under MIT license (see LICENSE for details)
 <Project>
 
   <PropertyGroup>
-    <EgonsoftHUAssemblyVersionTargetsFile>$(MSBuildThisFileDirectory)..\..\..\build\EgonsoftHU.AssemblyVersion.targets</EgonsoftHUAssemblyVersionTargetsFile>
-    <EgonsoftHUNuspecPropertiesTargetsFile>$(MSBuildThisFileDirectory)..\..\..\build\EgonsoftHU.NuspecProperties.targets</EgonsoftHUNuspecPropertiesTargetsFile>
+    <EgonsoftHUAssemblyVersionTargetsFile>$(MSBuildThisFileDirectory)..\..\build\EgonsoftHU.AssemblyVersion.targets</EgonsoftHUAssemblyVersionTargetsFile>
+    <EgonsoftHUNuspecPropertiesTargetsFile>$(MSBuildThisFileDirectory)..\..\build\EgonsoftHU.NuspecProperties.targets</EgonsoftHUNuspecPropertiesTargetsFile>
+    <EgonsoftHULangVersion90TargetsFile>$(MSBuildThisFileDirectory)..\..\build\EgonsoftHU.LangVersion_9.0.targets</EgonsoftHULangVersion90TargetsFile>
   </PropertyGroup>
 
   <Import Project="$(EgonsoftHUAssemblyVersionTargetsFile)" Condition="Exists('$(EgonsoftHUAssemblyVersionTargetsFile)')" />
   <Import Project="$(EgonsoftHUNuspecPropertiesTargetsFile)" Condition="Exists('$(EgonsoftHUNuspecPropertiesTargetsFile)')" />
+  <Import Project="$(EgonsoftHULangVersion90TargetsFile)" Condition="Exists('$(EgonsoftHULangVersion90TargetsFile)')" />
+
+  <PropertyGroup>
+    <LangVersion>9.0</LangVersion>
+    <LangVersion Condition=" '$(TargetFramework)' == 'net6.0' ">10.0</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
 </Project>
