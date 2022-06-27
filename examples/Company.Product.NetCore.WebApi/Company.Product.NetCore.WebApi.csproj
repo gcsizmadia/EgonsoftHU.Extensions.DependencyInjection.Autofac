@@ -1,16 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
     <RootNamespace>Company.Product.NetCore.WebApi</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <Description>Web API (net6.0)</Description>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.2.0" />
-    <PackageReference Include="EgonsoftHU.Extensions.DependencyInjection.Autofac" Version="1.0.2" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="EgonsoftHU.Extensions.DependencyInjection.Autofac" Version="1.0.3" />
   </ItemGroup>
 
   <ItemGroup>

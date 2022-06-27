@@ -224,7 +224,7 @@ builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.Autofac.Depende
 
 ## Examples
 
-Check out the `examples` folder that contains an `Examples.sln` solution file with the following projects:
+Check out [`Examples.sln`](Examples.sln) that references the following projects from the [`examples`](https://github.com/gcsizmadia/EgonsoftHU.Extensions.DependencyInjection.Autofac/tree/main/examples) folder:
 
 |Type|Project&nbsp;Name&nbsp;/&nbsp;Target&nbsp;Framework|Description|
 |:-:|-|-|

@@ -6,17 +6,16 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{92F65356-6903-41EF-B1C3-76DAA09977D2}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		Directory.Build.props = Directory.Build.props
-		GlobalAssemblyInfo.cs = GlobalAssemblyInfo.cs
+		examples\Directory.Build.props = examples\Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Company.Product.ComponentA", "Company.Product.ComponentA\Company.Product.ComponentA.csproj", "{3A526511-9225-4738-B554-FBF6A3B6A5ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Company.Product.ComponentA", "examples\Company.Product.ComponentA\Company.Product.ComponentA.csproj", "{3A526511-9225-4738-B554-FBF6A3B6A5ED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Company.Product.ComponentB", "Company.Product.ComponentB\Company.Product.ComponentB.csproj", "{A56C093E-9F11-4579-9655-B8A7F640CAC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Company.Product.ComponentB", "examples\Company.Product.ComponentB\Company.Product.ComponentB.csproj", "{A56C093E-9F11-4579-9655-B8A7F640CAC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Company.Product.NetFx.WebApi", "Company.Product.NetFx.WebApi\Company.Product.NetFx.WebApi.csproj", "{4B313CC0-1761-4A13-994C-A62A04D61577}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Company.Product.NetFx.WebApi", "examples\Company.Product.NetFx.WebApi\Company.Product.NetFx.WebApi.csproj", "{4B313CC0-1761-4A13-994C-A62A04D61577}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Company.Product.NetCore.WebApi", "Company.Product.NetCore.WebApi\Company.Product.NetCore.WebApi.csproj", "{FF10E09C-F878-4183-B8CA-00465A4213C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Company.Product.NetCore.WebApi", "examples\Company.Product.NetCore.WebApi\Company.Product.NetCore.WebApi.csproj", "{FF10E09C-F878-4183-B8CA-00465A4213C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

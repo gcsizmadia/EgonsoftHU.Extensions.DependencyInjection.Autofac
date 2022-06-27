@@ -7,6 +7,7 @@ using Company.Product.ComponentA;
 using Company.Product.ComponentB;
 using Company.Product.NetCore.WebApi.Services;
 
+using EgonsoftHU.Extensions.Bcl;
 using EgonsoftHU.Extensions.DependencyInjection;
 
 using Microsoft.AspNetCore.Mvc;
@@ -44,6 +45,8 @@ namespace Company.Product.NetCore.WebApi.Controllers
         [Route("api/tests")]
         public IActionResult GetAll()
         {
+            DefaultAssemblyRegistry.Current.ThrowIfNull();
+
             return
                 Ok(
                     new

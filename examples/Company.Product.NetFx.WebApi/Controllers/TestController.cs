@@ -8,6 +8,7 @@ using Company.Product.ComponentA;
 using Company.Product.ComponentB;
 using Company.Product.NetFx.WebApi.Services;
 
+using EgonsoftHU.Extensions.Bcl;
 using EgonsoftHU.Extensions.DependencyInjection;
 
 namespace Company.Product.NetFx.WebApi.Controllers
@@ -42,6 +43,8 @@ namespace Company.Product.NetFx.WebApi.Controllers
         [Route("api/tests")]
         public IHttpActionResult GetAll()
         {
+            DefaultAssemblyRegistry.Current.ThrowIfNull();
+
             return
                 Ok(
                     new
