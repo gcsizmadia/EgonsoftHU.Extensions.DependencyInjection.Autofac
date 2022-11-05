@@ -38,7 +38,7 @@ namespace EgonsoftHU.Extensions.DependencyInjection
                 )
             )
             {
-                builder.RegisterAssemblyModules(assemblies);
+                RegisterAssemblyModules(builder, assemblies);
             }
         }
 
@@ -61,6 +61,49 @@ namespace EgonsoftHU.Extensions.DependencyInjection
         private Assembly[] ExcludeThisAssembly(IEnumerable<Assembly> assemblies)
         {
             return assemblies.Where(assembly => assembly != ThisAssembly).ToArray();
+        }
+
+        private static void RegisterAssemblyModules(ContainerBuilder builder, Assembly[] assemblies)
+        {
+            if (!ShouldTreatModulesAsServices())
+            {
+                builder.RegisterAssemblyModules(assemblies);
+                return;
+            }
+
+            Type[] moduleTypes = GetModuleTypes(assemblies);
+
+            foreach (Type moduleType in moduleTypes)
+            {
+                switch (ModuleOptions.DependencyInjectionOption)
+                {
+                    case ModuleDependencyInjectionOption.PropertyInjection:
+                        ModulesContainerBuilder
+                            .RegisterType(moduleType)
+                            .As<IModule>()
+                            .SingleInstance()
+                            .PropertiesAutowired();
+                        break;
+
+                    case ModuleDependencyInjectionOption.ConstructorInjection:
+                        ModulesContainerBuilder
+                            .RegisterType(moduleType)
+                            .As<IModule>()
+                            .SingleInstance();
+                        break;
+
+                    case ModuleDependencyInjectionOption.NoInjection:
+                    default:
+                        break;
+                }
+            }
+
+            using IContainer modulesContainer = ModulesContainerBuilder.Build();
+
+            foreach (IModule module in modulesContainer.Resolve<IEnumerable<IModule>>())
+            {
+                builder.RegisterModule(module);
+            }
         }
 
         [MemberNotNullWhen(true, nameof(ModulesContainerBuilder))]
