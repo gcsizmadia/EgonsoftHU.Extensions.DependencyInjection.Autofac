@@ -10,23 +10,26 @@ using Autofac;
 
 using EgonsoftHU.Extensions.Bcl;
 
-namespace EgonsoftHU.Extensions.DependencyInjection.Autofac
+namespace EgonsoftHU.Extensions.DependencyInjection
 {
     /// <summary>
     /// Controls assembly registry configuration.
     /// </summary>
-    public static class ContainerBuilderExtensions
+    public static class AssemblyRegistryContainerBuilderExtensions
     {
         private static bool isConfigured = false;
 
         /// <summary>
         /// Use a custom assembly registry.
         /// </summary>
-        /// <param name="_">The Autofac ContainerBuilder instance.</param>
+        /// <param name="builder">The <see cref="ContainerBuilder"/> to add the services to.</param>
         /// <param name="assemblyRegistry">The assembly registry instance.</param>
-        public static void UseAssemblyRegistry(this ContainerBuilder _, object assemblyRegistry)
+        /// <returns>The <see cref="ContainerBuilder"/> so that additional calls can be chained.</returns>
+        public static ContainerBuilder UseAssemblyRegistry(this ContainerBuilder builder, object assemblyRegistry)
         {
             SetConfiguredOrThrow();
+
+            builder.ThrowIfNull();
             assemblyRegistry.ThrowIfNull();
 
             DependencyModule.AssemblyRegistryCustomInstance = assemblyRegistry;
@@ -56,36 +59,50 @@ namespace EgonsoftHU.Extensions.DependencyInjection.Autofac
 
                 throw ex;
             }
+
+            return builder;
         }
 
         /// <summary>
         /// Use a custom assembly registry.
         /// </summary>
         /// <typeparam name="TAssemblyRegistry">The type of the assembly registry. A parameterless ctor is required.</typeparam>
-        /// <param name="_">The Autofac ContainerBuilder instance.</param>
-        public static void UseAssemblyRegistry<TAssemblyRegistry>(this ContainerBuilder _) where TAssemblyRegistry : IAssemblyRegistry, new()
+        /// <param name="builder">The <see cref="ContainerBuilder"/> to add the services to.</param>
+        /// <returns>The <see cref="ContainerBuilder"/> so that additional calls can be chained.</returns>
+        public static ContainerBuilder UseAssemblyRegistry<TAssemblyRegistry>(this ContainerBuilder builder)
+            where TAssemblyRegistry : IAssemblyRegistry, new()
         {
             SetConfiguredOrThrow();
+
+            builder.ThrowIfNull();
+
             DependencyModule.AssemblyRegistryTypedInstance = new TAssemblyRegistry();
+
+            return builder;
         }
 
         /// <summary>
         /// Use a custom assembly registry.
         /// </summary>
-        /// <param name="_">The Autofac ContainerBuilder instance.</param>
+        /// <param name="builder">The <see cref="ContainerBuilder"/> to add the services to.</param>
         /// <param name="assemblyRegistry">The assembly registry instance.</param>
-        public static void UseAssemblyRegistry(this ContainerBuilder _, IAssemblyRegistry assemblyRegistry)
+        /// <returns>The <see cref="ContainerBuilder"/> so that additional calls can be chained.</returns>
+        public static ContainerBuilder UseAssemblyRegistry(this ContainerBuilder builder, IAssemblyRegistry assemblyRegistry)
         {
             SetConfiguredOrThrow();
+
+            builder.ThrowIfNull();
             assemblyRegistry.ThrowIfNull();
 
             DependencyModule.AssemblyRegistryTypedInstance = assemblyRegistry;
+
+            return builder;
         }
 
         /// <summary>
         /// Use the default assembly registry that uses assembly file name prefixes the search for assemblies to register.
         /// </summary>
-        /// <param name="_">The Autofac ContainerBuilder instance.</param>
+        /// <param name="builder">The <see cref="ContainerBuilder"/> to add the services to.</param>
         /// <param name="assemblyFileNamePrefixes">The prefixes for assembly file names.</param>
         /// <remarks>
         /// The file name pattern for searching assembly files will be the following: <c>[prefix].*.dll</c>
@@ -96,10 +113,16 @@ namespace EgonsoftHU.Extensions.DependencyInjection.Autofac
         /// <br/><c>MyCompany.*.dll</c>
         /// </para>
         /// </remarks>
-        public static void UseDefaultAssemblyRegistry(this ContainerBuilder _, params string[] assemblyFileNamePrefixes)
+        /// <returns>The <see cref="ContainerBuilder"/> so that additional calls can be chained.</returns>
+        public static ContainerBuilder UseDefaultAssemblyRegistry(this ContainerBuilder builder, params string[] assemblyFileNamePrefixes)
         {
             SetConfiguredOrThrow();
+
+            builder.ThrowIfNull();
+
             DependencyModule.AssemblyRegistryTypedInstance = DefaultAssemblyRegistry.Initialize(assemblyFileNamePrefixes);
+
+            return builder;
         }
 
         private static void SetConfiguredOrThrow()
