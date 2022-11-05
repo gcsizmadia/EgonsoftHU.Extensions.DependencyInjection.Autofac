@@ -10,7 +10,7 @@ This code is licensed under MIT license (see LICENSE for details)
   </PropertyGroup>
 
   <PropertyGroup>
-    <RootNamespace>EgonsoftHU.Extensions.DependencyInjection.Autofac</RootNamespace>
+    <RootNamespace>EgonsoftHU.Extensions.DependencyInjection</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>
