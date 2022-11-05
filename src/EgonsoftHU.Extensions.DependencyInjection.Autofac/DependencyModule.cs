@@ -1,7 +1,9 @@
 ﻿// Copyright © 2022 Gabor Csizmadia
 // This code is licensed under MIT license (see LICENSE for details)
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
@@ -40,6 +42,22 @@ namespace EgonsoftHU.Extensions.DependencyInjection.Autofac
             }
 
             builder.RegisterAssemblyModules(assemblies);
+        }
+
+        private bool TryGetAssemblies([NotNullWhen(true)] out Assembly[]? assemblies, params Func<object?>[] assembliesSelectors)
+        {
+            assemblies = null;
+
+            foreach (Func<object?> assembliesSelector in assembliesSelectors)
+            {
+                if (assembliesSelector.Invoke() is IEnumerable<Assembly> selectedAssemblies)
+                {
+                    assemblies = ExcludeThisAssembly(selectedAssemblies);
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private Assembly[] ExcludeThisAssembly(IEnumerable<Assembly> assemblies)
