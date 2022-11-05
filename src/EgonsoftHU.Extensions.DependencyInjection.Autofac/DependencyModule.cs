@@ -12,7 +12,7 @@ using Autofac.Core;
 
 using Module = Autofac.Module;
 
-namespace EgonsoftHU.Extensions.DependencyInjection.Autofac
+namespace EgonsoftHU.Extensions.DependencyInjection
 {
     /// <summary>
     /// Registers all other dependency modules that are derived from <see cref="Module"/> type.
@@ -23,6 +23,9 @@ namespace EgonsoftHU.Extensions.DependencyInjection.Autofac
 
         internal static object? AssemblyRegistryCustomInstance;
         internal static MethodInfo? GetAssembliesMethod;
+
+        internal static ModuleOptions ModuleOptions = new();
+        internal static ContainerBuilder? ModulesContainerBuilder;
 
         /// <inheritdoc/>
         protected override void Load(ContainerBuilder builder)
@@ -58,6 +61,12 @@ namespace EgonsoftHU.Extensions.DependencyInjection.Autofac
         private Assembly[] ExcludeThisAssembly(IEnumerable<Assembly> assemblies)
         {
             return assemblies.Where(assembly => assembly != ThisAssembly).ToArray();
+        }
+
+        [MemberNotNullWhen(true, nameof(ModulesContainerBuilder))]
+        private static bool ShouldTreatModulesAsServices()
+        {
+            return ModuleOptions.TreatModulesAsServices;
         }
 
         private static Type[] GetModuleTypes(IEnumerable<Assembly> assemblies)
