@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 
 using Autofac;
+using Autofac.Core;
 
 using Module = Autofac.Module;
 
@@ -57,6 +58,20 @@ namespace EgonsoftHU.Extensions.DependencyInjection.Autofac
         private Assembly[] ExcludeThisAssembly(IEnumerable<Assembly> assemblies)
         {
             return assemblies.Where(assembly => assembly != ThisAssembly).ToArray();
+        }
+
+        private static Type[] GetModuleTypes(IEnumerable<Assembly> assemblies)
+        {
+            return
+                assemblies
+                    .SelectMany(
+                        assembly =>
+                        assembly
+                            .DefinedTypes
+                            .Where(typeInfo => !typeInfo.IsAbstract && typeof(IModule).IsAssignableFrom(typeInfo.AsType()))
+                            .Select(typeInfo => typeInfo.AsType())
+                    )
+                    .ToArray();
         }
     }
 }
