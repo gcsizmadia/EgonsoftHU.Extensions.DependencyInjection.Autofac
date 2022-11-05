@@ -24,6 +24,7 @@
     -->
     <PackageTags>$(PackageTags) extensions extension dependencyinjection di ioc autofac module</PackageTags>
     <PackageReleaseNotes>Please visit https://github.com/gcsizmadia/EgonsoftHU.Extensions.DependencyInjection.Autofac/releases to view the release notes.</PackageReleaseNotes>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RepositoryUrl>https://github.com/gcsizmadia/EgonsoftHU.Extensions.DependencyInjection.Autofac.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <!--
@@ -32,7 +33,7 @@
     -->
     <PackageType>Dependency</PackageType>
     <DevelopmentDependency>false</DevelopmentDependency>
-    <MinClientVersion>4.1.0</MinClientVersion>
+    <MinClientVersion>4.7.0</MinClientVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.9.4" />
