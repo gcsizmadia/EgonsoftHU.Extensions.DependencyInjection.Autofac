@@ -26,22 +26,16 @@ namespace EgonsoftHU.Extensions.DependencyInjection.Autofac
         /// <inheritdoc/>
         protected override void Load(ContainerBuilder builder)
         {
-            Assembly[] assemblies;
-
-            if (AssemblyRegistryTypedInstance?.GetAssemblies() is Assembly[] assemblies1)
+            if (
+                TryGetAssemblies(
+                    out Assembly[]? assemblies,
+                    () => AssemblyRegistryTypedInstance?.GetAssemblies(),
+                    () => GetAssembliesMethod?.Invoke(AssemblyRegistryCustomInstance, null)
+                )
+            )
             {
-                assemblies = ExcludeThisAssembly(assemblies1);
+                builder.RegisterAssemblyModules(assemblies);
             }
-            else if (GetAssembliesMethod?.Invoke(AssemblyRegistryCustomInstance, null) is IEnumerable<Assembly> assemblies2)
-            {
-                assemblies = ExcludeThisAssembly(assemblies2);
-            }
-            else
-            {
-                return;
-            }
-
-            builder.RegisterAssemblyModules(assemblies);
         }
 
         private bool TryGetAssemblies([NotNullWhen(true)] out Assembly[]? assemblies, params Func<object?>[] assembliesSelectors)
