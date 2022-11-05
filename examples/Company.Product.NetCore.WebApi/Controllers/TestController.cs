@@ -3,7 +3,7 @@
 
 using System.Linq;
 
-using Company.Product.ComponentA;
+using Company.Product.ComponentA.NetCore;
 using Company.Product.ComponentB;
 using Company.Product.NetCore.WebApi.Services;
 
@@ -51,7 +51,7 @@ namespace Company.Product.NetCore.WebApi.Controllers
                 Ok(
                     new
                     {
-                        ServiceA = serviceA.GetMessage(),
+                        ServiceA = serviceA.GetData(),
                         ServiceB = serviceB.GetMessage(),
                         ServiceC = serviceC.GetMessage(),
                         Assemblies =

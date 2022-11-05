@@ -1,15 +1,19 @@
 ﻿// Copyright © 2022 Gabor Csizmadia
 // This code is licensed under MIT license (see LICENSE for details)
 
+using System.Collections.Specialized;
+
 using Autofac;
 
-namespace Company.Product.ComponentA
+namespace Company.Product.ComponentA.NetFx
 {
     /// <summary>
     /// An Autofac dependency module that registers services of ComponentA.
     /// </summary>
     public class DependencyModule : Module
     {
+        public NameValueCollection? AppSettings { get; set; }
+
         /// <summary>
         /// Registers services of ComponentA.
         /// </summary>
@@ -19,7 +23,9 @@ namespace Company.Product.ComponentA
             builder
                 .RegisterType<ServiceA>()
                 .AsSelf()
-                .SingleInstance();
+                .SingleInstance()
+                .WithParameter(new NamedParameter("environmentName", AppSettings?["EnvironmentName"] ?? "N/A"))
+                .WithParameter(new NamedParameter("welcomeMessage", AppSettings?["ServiceA:WelcomeMessage"] ?? "N/A"));
         }
     }
 }

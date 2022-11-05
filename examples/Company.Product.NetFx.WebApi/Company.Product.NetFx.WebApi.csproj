@@ -46,20 +46,20 @@
     <Reference Include="Autofac, Version=6.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Autofac.6.4.0\lib\netstandard2.0\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="Autofac.Integration.WebApi, Version=6.1.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Autofac.WebApi2.6.1.0\lib\net472\Autofac.Integration.WebApi.dll</HintPath>
+    <Reference Include="Autofac.Integration.WebApi, Version=6.1.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Autofac.WebApi2.6.1.1\lib\net472\Autofac.Integration.WebApi.dll</HintPath>
     </Reference>
     <Reference Include="EgonsoftHU.Extensions.Bcl, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EgonsoftHU.Extensions.Bcl.2.0.0\lib\net461\EgonsoftHU.Extensions.Bcl.dll</HintPath>
     </Reference>
-    <Reference Include="EgonsoftHU.Extensions.DependencyInjection.Abstractions, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\EgonsoftHU.Extensions.DependencyInjection.Abstractions.1.0.2\lib\net461\EgonsoftHU.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    <Reference Include="EgonsoftHU.Extensions.DependencyInjection.Abstractions, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EgonsoftHU.Extensions.DependencyInjection.Abstractions.2.0.0\lib\net461\EgonsoftHU.Extensions.DependencyInjection.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="EgonsoftHU.Extensions.DependencyInjection.Autofac, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\EgonsoftHU.Extensions.DependencyInjection.Autofac.1.0.3\lib\net461\EgonsoftHU.Extensions.DependencyInjection.Autofac.dll</HintPath>
+    <Reference Include="EgonsoftHU.Extensions.DependencyInjection.Autofac, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EgonsoftHU.Extensions.DependencyInjection.Autofac.1.1.0-prerelease-1\lib\net461\EgonsoftHU.Extensions.DependencyInjection.Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="EgonsoftHU.Extensions.Logging.Serilog, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\EgonsoftHU.Extensions.Logging.Serilog.1.0.1\lib\net461\EgonsoftHU.Extensions.Logging.Serilog.dll</HintPath>
+    <Reference Include="EgonsoftHU.Extensions.Logging.Serilog, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EgonsoftHU.Extensions.Logging.Serilog.2.0.0\lib\net461\EgonsoftHU.Extensions.Logging.Serilog.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
@@ -72,10 +72,10 @@
       <HintPath>..\..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Serilog.2.11.0\lib\net46\Serilog.dll</HintPath>
+      <HintPath>..\..\packages\Serilog.2.12.0\lib\net47\Serilog.dll</HintPath>
     </Reference>
-    <Reference Include="Serilog.Sinks.Console, Version=4.0.1.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Serilog.Sinks.Console.4.0.1\lib\net45\Serilog.Sinks.Console.dll</HintPath>
+    <Reference Include="Serilog.Sinks.Console, Version=4.1.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Serilog.Sinks.Console.4.1.0\lib\net45\Serilog.Sinks.Console.dll</HintPath>
     </Reference>
     <Reference Include="Serilog.Sinks.Debug, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Serilog.Sinks.Debug.2.0.0\lib\net46\Serilog.Sinks.Debug.dll</HintPath>
@@ -132,6 +132,7 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.Extensions.Autofac.cs" />
+    <Compile Include="App_Start\WebApiConfig.Extensions.Serilog.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -157,9 +158,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Company.Product.ComponentA\Company.Product.ComponentA.csproj">
-      <Project>{778695b0-b6b8-4fb0-9408-5d3faf293b81}</Project>
-      <Name>Company.Product.ComponentA</Name>
+    <ProjectReference Include="..\Company.Product.ComponentA.NetFx\Company.Product.ComponentA.NetFx.csproj">
+      <Project>{663d2518-c5ef-46a8-a212-e590d38930dc}</Project>
+      <Name>Company.Product.ComponentA.NetFx</Name>
     </ProjectReference>
     <ProjectReference Include="..\Company.Product.ComponentB\Company.Product.ComponentB.csproj">
       <Project>{d71efdfe-82d7-4581-a9da-28113eb5e535}</Project>
@@ -181,7 +182,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>57965</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:57939/</IISUrl>
+          <IISUrl>http://localhost:9048/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

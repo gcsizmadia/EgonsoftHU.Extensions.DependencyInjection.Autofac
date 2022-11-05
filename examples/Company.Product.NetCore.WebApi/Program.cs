@@ -4,10 +4,11 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 
-using EgonsoftHU.Extensions.DependencyInjection.Autofac;
+using EgonsoftHU.Extensions.DependencyInjection;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Company.Product.NetCore.WebApi
 {
@@ -22,6 +23,7 @@ namespace Company.Product.NetCore.WebApi
         /// <param name="args">Command-line arguments passed when the process started.</param>
         public static void Main(string[] args)
         {
+            ConfigureDefaultAssemblyRegistry();
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -42,12 +44,46 @@ namespace Company.Product.NetCore.WebApi
                     )
                     .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                     .ConfigureContainer<ContainerBuilder>(
-                        builder =>
+                        (hostBuilderContext, builder) =>
                         {
-                            builder.UseDefaultAssemblyRegistry(nameof(Company));
-                            builder.RegisterModule<DependencyModule>();
+                            builder
+                                .UseDefaultAssemblyRegistry(nameof(Company))
+                                .TreatModulesAsServices()
+                                .RegisterModuleDependencyInstance(hostBuilderContext.Configuration)
+                                .RegisterModuleDependencyInstance(hostBuilderContext.HostingEnvironment)
+                                .RegisterModule<DependencyModule>();
                         }
                     );
+        }
+
+        private static void ConfigureDefaultAssemblyRegistry()
+        {
+            ILoggerFactory loggerFactory = LoggerFactory.Create(
+                loggingBuilder =>
+                loggingBuilder
+                    .SetMinimumLevel(LogLevel.Debug)
+                    .AddJsonConsole(
+                        options =>
+                        {
+                            options.IncludeScopes = true;
+                            options.JsonWriterOptions = new() { Indented = true };
+                        }
+                    )
+                    .AddDebug()
+            );
+
+            DefaultAssemblyRegistry.ConfigureLogging(
+                logEvent =>
+                {
+                    ILogger logger = loggerFactory.CreateLogger<DefaultAssemblyRegistry>();
+
+                    using (logger.BeginScope(logEvent.Properties))
+                    {
+                        logger.LogDebug(logEvent.MessageTemplate.Structured, logEvent.Arguments);
+                    }
+                },
+                LoggingLibrary.MicrosoftExtensionsLogging
+            );
         }
     }
 }

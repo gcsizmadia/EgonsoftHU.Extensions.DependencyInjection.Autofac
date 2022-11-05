@@ -2,21 +2,23 @@
 // This code is licensed under MIT license (see LICENSE for details)
 
 using System.Linq;
-using System.Web.Http;
 
-using Company.Product.ComponentA.NetFx;
+using Company.Product.ComponentA.NetCore;
 using Company.Product.ComponentB;
-using Company.Product.NetFx.WebApi.Services;
+using Company.Product.Net6.WebApi.Services;
 
 using EgonsoftHU.Extensions.Bcl;
 using EgonsoftHU.Extensions.DependencyInjection;
 
-namespace Company.Product.NetFx.WebApi.Controllers
+using Microsoft.AspNetCore.Mvc;
+
+namespace Company.Product.Net6.WebApi.Controllers
 {
     /// <summary>
     /// Provides an API endpoint to test the injection of services.
     /// </summary>
-    public class TestController : ApiController
+    [ApiController]
+    public class TestController : ControllerBase
     {
         private readonly ServiceA serviceA;
         private readonly ServiceB serviceB;
@@ -41,7 +43,7 @@ namespace Company.Product.NetFx.WebApi.Controllers
         /// <returns>an object with the welcome messages.</returns>
         [HttpGet]
         [Route("api/tests")]
-        public IHttpActionResult GetAll()
+        public IActionResult GetAll()
         {
             DefaultAssemblyRegistry.Current.ThrowIfNull();
 

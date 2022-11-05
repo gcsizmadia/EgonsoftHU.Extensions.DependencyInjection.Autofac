@@ -17,6 +17,7 @@ namespace Company.Product.NetFx.WebApi
         public static void Register(HttpConfiguration httpConfiguration)
         {
             // Web API configuration and services
+            httpConfiguration.ConfigureSerilog();
             httpConfiguration.ConfigureAutofac();
 
             // Web API routes
