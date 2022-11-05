@@ -28,11 +28,11 @@ namespace EgonsoftHU.Extensions.DependencyInjection.Autofac
 
             if (AssemblyRegistryTypedInstance?.GetAssemblies() is Assembly[] assemblies1)
             {
-                assemblies = FilterThisAssembly(assemblies1);
+                assemblies = ExcludeThisAssembly(assemblies1);
             }
             else if (GetAssembliesMethod?.Invoke(AssemblyRegistryCustomInstance, null) is IEnumerable<Assembly> assemblies2)
             {
-                assemblies = FilterThisAssembly(assemblies2);
+                assemblies = ExcludeThisAssembly(assemblies2);
             }
             else
             {
@@ -42,7 +42,7 @@ namespace EgonsoftHU.Extensions.DependencyInjection.Autofac
             builder.RegisterAssemblyModules(assemblies);
         }
 
-        private Assembly[] FilterThisAssembly(IEnumerable<Assembly> assemblies)
+        private Assembly[] ExcludeThisAssembly(IEnumerable<Assembly> assemblies)
         {
             return assemblies.Where(assembly => assembly != ThisAssembly).ToArray();
         }
