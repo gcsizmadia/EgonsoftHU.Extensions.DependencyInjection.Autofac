@@ -6,7 +6,7 @@
 
 A dependency module (derived from Autofac.Module) that discovers and registers all other dependency modules (derived from Autofac.Module).
 
-Please note: `EgonsoftHU.Extensions.DependencyInjection.Abstractions` project moved to [its own repository](https://github.com/gcsizmadia/EgonsoftHU.Extensions.DependencyInjection.Abstractions).
+**Please note:** `EgonsoftHU.Extensions.DependencyInjection.Abstractions` project moved to [its own repository](https://github.com/gcsizmadia/EgonsoftHU.Extensions.DependencyInjection.Abstractions).
 
 ## Table of Contents
 
@@ -22,8 +22,7 @@ Please note: `EgonsoftHU.Extensions.DependencyInjection.Abstractions` project mo
   - [Usage option #3 - Use your custom assembly registry (interface only)](#usage-option-3---use-your-custom-assembly-registry-interface-only)
   - [Usage option #4 - Use your custom assembly registry (it will be used through reflection)](#usage-option-4---use-your-custom-assembly-registry-it-will-be-used-through-reflection)
 - [Examples](#examples)
-  - [Example output - .NET Framework 4.8](#example-output---net-framework-48)
-  - [Example output - .NET 6](#example-output---net-6)
+  - [Example output](#example-output)
 
 ## Introduction
 
@@ -40,7 +39,7 @@ You can find the release notes [here](https://github.com/gcsizmadia/EgonsoftHU.E
 
 This package references Autofac **4.9.4** nuget package but in your project you can use a newer version of Autofac.
 
-Tested with Autofac **6.3.0** nuget package.
+Tested with Autofac **6.4.0** nuget package.
 
 ## Summary
 
@@ -57,7 +56,7 @@ You can provide your own implementation. The required steps to implement:
   *either* using the parameterless ctor  
   *or* any other way that happens before configuring your implementation as the assembly registry
 - **Getting all assemblies**  
-  *either* implement this interface: `EgonsoftHU.Extensions.DependencyInjection.Autofac.IAssemblyRegistry`  
+  *either* implement this interface: `EgonsoftHU.Extensions.DependencyInjection.IAssemblyRegistry`  
   *or* provide a public parameterless instance method that can be called using reflection.  
      e.g. `public IEnumerable<Assembly> GetAssemblies()`  
      **Note:**
@@ -83,7 +82,7 @@ dotnet add package EgonsoftHU.Extensions.DependencyInjection.Autofac
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 
-using EgonsoftHU.Extensions.DependencyInjection.Autofac;
+using EgonsoftHU.Extensions.DependencyInjection;
 
 namespace YourCompany.YourProduct.WebApi
 {
@@ -118,7 +117,7 @@ namespace YourCompany.YourProduct.WebApi
 ```C#
 using Autofac;
 
-using EgonsoftHU.Extensions.DependencyInjection.Autofac;
+using EgonsoftHU.Extensions.DependencyInjection;
 
 namespace YourCompany.YourProduct.WebApi
 {
@@ -170,7 +169,7 @@ builder.UseDefaultAssemblyRegistry(nameof(YourCompany));
 builder.UseAssemblyRegistry(DefaultAssemblyRegistry.Current);
 
 // Step #2: Register the module that will discover and register all other modules.
-builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.Autofac.DependencyModule>();
+builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.DependencyModule>();
 ```
 
 ### Usage option #2 - Use your custom assembly registry (interface + parameterless ctor)
@@ -180,13 +179,13 @@ builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.Autofac.Depende
  * Step #1: Configure assembly registry
  *
  * The custom assembly registry must:
- * - implement this interface: EgonsoftHU.Extensions.DependencyInjection.Autofac.IAssemblyRegistry
+ * - implement this interface: EgonsoftHU.Extensions.DependencyInjection.IAssemblyRegistry
  * - have a parameterless ctor that initializes the instance
  */
 builder.UseAssemblyRegistry<YourCustomAssemblyRegistry>();
 
 // Step #2: Register the module that will discover and register all other modules.
-builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.Autofac.DependencyModule>();
+builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.DependencyModule>();
 ```
 
 ### Usage option #3 - Use your custom assembly registry (interface only)
@@ -196,13 +195,13 @@ builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.Autofac.Depende
  * Step #1: Configure assembly registry
  *
  * The custom assembly registry must:
- * - implement this interface: EgonsoftHU.Extensions.DependencyInjection.Autofac.IAssemblyRegistry
+ * - implement this interface: EgonsoftHU.Extensions.DependencyInjection.IAssemblyRegistry
  */
 IAssemblyRegistry assemblyRegistry = /* get an initialized instance of YourCustomAssemblyRegistry */
 builder.UseAssemblyRegistry(assemblyRegistry);
 
 // Step #2: Register the module that will discover and register all other modules.
-builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.Autofac.DependencyModule>();
+builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.DependencyModule>();
 ```
 
 ### Usage option #4 - Use your custom assembly registry (it will be used through reflection)
@@ -219,7 +218,7 @@ object assemblyRegistry = /* get an initialized instance of YourCustomAssemblyRe
 builder.UseAssemblyRegistry(assemblyRegistry);
 
 // Step #2: Register the module that will discover and register all other modules.
-builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.Autofac.DependencyModule>();
+builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.DependencyModule>();
 ```
 
 ## Examples
@@ -228,39 +227,80 @@ Check out [`Examples.sln`](Examples.sln) that references the following projects 
 
 |Type|Project&nbsp;Name&nbsp;/&nbsp;Target&nbsp;Framework|Description|
 |:-:|-|-|
-|![C# Class Library](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library")![C# Class Library](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library")|`Company.Product.ComponentA`<br/>.NET&nbsp;Standard&nbsp;2.0|Contains `ServiceA` and a `DependencyModule` that registers it.|
+|![C# Class Library](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library")![C# Class Library](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library")|`Company.Product.ComponentA.NetFx`<br/>.NET&nbsp;Framework&nbsp;4.8|Contains `ServiceA` and a `DependencyModule` that registers it.<br/><br/>`ConfigurationManager.AppSettings` is injected into `DependencyModule`.|
+|![C# Class Library](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library")![C# Class Library](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library")|`Company.Product.ComponentA.NetCore`<br/>.NET&nbsp;Core&nbsp;3.1|Contains `ServiceA` and a `DependencyModule` that registers it.<br/><br/>`IConfiguration` and `IHostEnvironment` are injected into `DependencyModule`.|
 |![C# Class Library](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library")![C# Class Library](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library")|`Company.Product.ComponentB`<br/>.NET&nbsp;Standard&nbsp;2.0|Contains `ServiceB` and a `DependencyModule` that registers it.|
-|![C# Web Application](images/light/CSWebApplication.png#gh-light-mode-only "C# Web Application")![C# Web Application](images/dark/CSWebApplication.png#gh-dark-mode-only "C# Web Application")|`Company.Product.NetFx.WebApi`<br/>.NET&nbsp;Framework&nbsp;4.8|Uses `ServiceA` and `ServiceB` and also contains and uses `ServiceC` and a `DependencyModule` that registers it.|
-|![C# Web Application](images/light/CSWebApplication.png#gh-light-mode-only "C# Web Application")![C# Web Application](images/dark/CSWebApplication.png#gh-dark-mode-only "C# Web Application")|`Company.Product.NetCore.WebApi`<br/>.NET&nbsp;6.0|Uses `ServiceA` and `ServiceB` and also contains and uses `ServiceC` and a `DependencyModule` that registers it.|
+|![C# Web Application](images/light/CSWebApplication.png#gh-light-mode-only "C# Web Application")![C# Web Application](images/dark/CSWebApplication.png#gh-dark-mode-only "C# Web Application")|`Company.Product.NetFx.WebApi`<br/>.NET&nbsp;Framework&nbsp;4.8|Uses `ServiceA` and `ServiceB` and also contains and uses `ServiceC` and a `DependencyModule` that registers it.<br/><br/>`DefaultAssemblyRegistry` is configured to use `Serilog`.|
+|![C# Web Application](images/light/CSWebApplication.png#gh-light-mode-only "C# Web Application")![C# Web Application](images/dark/CSWebApplication.png#gh-dark-mode-only "C# Web Application")|`Company.Product.NetCore.WebApi`<br/>.NET&nbsp;Core&nbsp;3.1|Uses `ServiceA` and `ServiceB` and also contains and uses `ServiceC` and a `DependencyModule` that registers it.<br/><br/>`DefaultAssemblyRegistry` is configured to use `Microsoft.Extensions.Logging`.|
+|![C# Web Application](images/light/CSWebApplication.png#gh-light-mode-only "C# Web Application")![C# Web Application](images/dark/CSWebApplication.png#gh-dark-mode-only "C# Web Application")|`Company.Product.Net6.WebApi`<br/>.NET&nbsp;6.0|Uses `ServiceA` and `ServiceB` and also contains and uses `ServiceC` and a `DependencyModule` that registers it.<br/><br/>`DefaultAssemblyRegistry` is configured to use `Serilog`.|
 
-### Example output - .NET Framework 4.8
+### Example output
 
 Navigating to the `~/api/tests` API endpoint should display this result:
+
+*.NET Framework 4.8*
+
 ```json
 {
-  "ServiceA": "Hello from Company.Product.ComponentA.ServiceA",
+  "ServiceA": [
+    "Hello from Company.Product.ComponentA.NetFx.ServiceA",
+    {
+      "EnvironmentName": "Development",
+      "WelcomeMessage": "Welcome from the Web.config file."
+    }
+  ],
   "ServiceB": "Hello from Company.Product.ComponentB.ServiceB",
   "ServiceC": "Hello from Company.Product.NetFx.WebApi.Services.ServiceC",
   "Assemblies": [
-    "Company.Product.ComponentA, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "Company.Product.ComponentA.NetFx, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "Company.Product.ComponentB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "Company.Product.NetFx.WebApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
   ]
 }
 ```
 
-### Example output - .NET 6
+*.NET Core 3.1*
 
-Navigating to the `~/api/tests` API endpoint should display this result:
 ```json
 {
-  "serviceA": "Hello from Company.Product.ComponentA.ServiceA",
+  "serviceA": [
+    "Hello from Company.Product.ComponentA.NetCore.ServiceA",
+    {
+      "environmentName": "Development",
+      "serviceAOptions": {
+        "welcomeMessage": "Welcome from the appsettings.Development.json file."
+      }
+    }
+  ],
   "serviceB": "Hello from Company.Product.ComponentB.ServiceB",
   "serviceC": "Hello from Company.Product.NetCore.WebApi.Services.ServiceC",
   "assemblies": [
-    "Company.Product.ComponentA, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "Company.Product.ComponentA.NetCore, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "Company.Product.ComponentB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "Company.Product.NetCore.WebApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+  ]
+}
+```
+
+*.NET 6.0*
+
+```json
+{
+  "serviceA": [
+    "Hello from Company.Product.ComponentA.NetCore.ServiceA",
+    {
+      "environmentName": "Development",
+      "serviceAOptions": {
+        "welcomeMessage": "Welcome from the appsettings.Development.json file."
+      }
+    }
+  ],
+  "serviceB": "Hello from Company.Product.ComponentB.ServiceB",
+  "serviceC": "Hello from Company.Product.Net6.WebApi.Services.ServiceC",
+  "assemblies": [
+    "Company.Product.ComponentA.NetCore, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "Company.Product.ComponentB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "Company.Product.Net6.WebApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
   ]
 }
 ```
