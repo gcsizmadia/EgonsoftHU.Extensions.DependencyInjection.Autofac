@@ -21,6 +21,7 @@ A dependency module (derived from Autofac.Module) that discovers and registers a
   - [Usage option #2 - Use your custom assembly registry (interface + parameterless ctor)](#usage-option-2---use-your-custom-assembly-registry-interface--parameterless-ctor)
   - [Usage option #3 - Use your custom assembly registry (interface only)](#usage-option-3---use-your-custom-assembly-registry-interface-only)
   - [Usage option #4 - Use your custom assembly registry (it will be used through reflection)](#usage-option-4---use-your-custom-assembly-registry-it-will-be-used-through-reflection)
+- [Module Dependencies - injection into modules](#module-dependencies---injection-into-modules)
 - [Examples](#examples)
   - [Example output](#example-output)
 
@@ -220,6 +221,104 @@ builder.UseAssemblyRegistry(assemblyRegistry);
 // Step #2: Register the module that will discover and register all other modules.
 builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.DependencyModule>();
 ```
+
+## Module Dependencies - injection into modules
+
+If you need to access some external information (e.g. `IConfiguration`) inside a module for registering a service then you can inject it.
+
+Let's see the following example:
+
+```csharp
+using EgonsoftHU.Extensions.DependencyInjection;
+
+builder
+    .Host
+    .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+    .ConfigureContainer<ContainerBuilder>(
+        (hostBuilderContext, containerBuilder) =>
+        {
+            containerBuilder
+                .UseDefaultAssemblyRegistry(nameof(Company))
+                .TreatModulesAsServices()
+                .RegisterModuleDependencyInstance(hostBuilderContext.Configuration)
+                .RegisterModuleDependencyInstance(hostBuilderContext.HostingEnvironment)
+                .RegisterModule<EgonsoftHU.Extensions.DependencyInjection.DependencyModule>();
+        }
+    );
+```
+
+- `TreatModulesAsServices()`  
+  - The dependency modules (derived from `Autofac.Module`) themselves as `Autofac.IModule` service type will be registered into a separate, temporary Autofac `ContainerBuilder` instance.
+  - Each dependency module will be resolved from this container with their dependencies.
+  - The resolved dependency module instance will then be registered using the main Autofac `ContainerBuilder` instance.
+- `RegisterModuleDependencyInstance<T>(T instance)`
+  - Registers an object instance as `T` service type into that seperate, temporary Autofac `ContainerBuilder` instance.
+
+By default, the dependency module will get its dependencies through *property injection*.  
+So your module has to have a public writable property with `T` type.
+
+```csharp
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
+public class DependencyModule : Module
+{
+    public IConfiguration Configuration { get; set; } = default!;
+
+    protected override void Load(ContainerBuilder builder)
+    {
+        if (Configuration is null)
+        {
+            // Return or throw exception.
+        }
+
+        var services = new ServiceCollection();
+
+        services
+            .AddOptions<MyCustomOptions>()
+            // Microsoft.Extensions.Options.ConfigurationExtensions nuget package
+            .Bind(Configuration.GetSection("MyCustomOptions"))
+            // Microsoft.Extensions.Options.DataAnnotations nuget package
+            .ValidateDataAnnotations()
+            // Microsoft.Extensions.Hosting nuget package
+            .ValidateOnStart();
+
+        // Autofac.Extensions.DependencyInjection nuget package
+        builder.Populate(services);
+
+        // Now you can register a service type that requires IOptions<MyCustomOptions>
+    }
+}
+```
+
+You can also use *constructor injection*.
+
+In this case instead of `TreatModulesAsServices()` extension method use `ConfigureModuleOptions()` extension method as below:
+
+```csharp
+containerBuilder
+    .UseDefaultAssemblyRegistry(nameof(Company))
+    .ConfigureModuleOptions(
+        options =>
+        {
+            options.TreatModulesAsServices = true;
+            options.DependencyInjectionOption = ModuleDependencyInjectionOption.ConstructorInjection;
+        }
+    )
+    .RegisterModuleDependencyInstance(hostBuilderContext.Configuration)
+    .RegisterModuleDependencyInstance(hostBuilderContext.HostingEnvironment)
+    .RegisterModule<EgonsoftHU.Extensions.DependencyInjection.DependencyModule>();
+```
+
+**Please note:**
+
+- Module dependency instances are registered this way:  
+  `ContainerBuilder.RegisterInstance().ExternallyOwned()`
+- You might register more instances of type `T` in which case set the type of the property (or the constructor parameter) to `IEnumerable<T>`.
 
 ## Examples
 
