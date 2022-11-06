@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net461;netcoreapp3.1;net6.0</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup>
     <PackageId>EgonsoftHU.Extensions.DependencyInjection.Autofac</PackageId>
-    <VersionPrefix>1.0.3</VersionPrefix>
+    <VersionPrefix>2.0.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
     <Authors>Gabor Csizmadia</Authors>
     <Owners>Egonsoft.HU</Owners>
