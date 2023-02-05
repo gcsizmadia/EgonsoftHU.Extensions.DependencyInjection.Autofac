@@ -6,6 +6,8 @@
 
 A dependency module (derived from Autofac.Module) that discovers and registers all other dependency modules (derived from Autofac.Module).
 
+The dependency modules can also have shared dependencies injected into them, e.g. `IConfiguration`, `IHostEnvironment` and even `IServiceCollection`, see [Module Dependencies - injection into modules](#module-dependencies---injection-into-modules) for details.
+
 **Please note:** `EgonsoftHU.Extensions.DependencyInjection.Abstractions` project moved to [its own repository](https://github.com/gcsizmadia/EgonsoftHU.Extensions.DependencyInjection.Abstractions).
 
 ## Table of Contents
@@ -27,7 +29,7 @@ A dependency module (derived from Autofac.Module) that discovers and registers a
 
 ## Introduction
 
-The motivation behind this project is to automatically discover and register all dependency modules in projects that are referenced by the startup project.
+The motivation behind this project is to automatically discover and register all dependency modules in projects that are referenced by the startup project and also being able to use `IConfiguration`, `IHostEnvironment` and even `IServiceCollection` instances as well.
 
 ## Releases
 
@@ -38,9 +40,13 @@ You can find the release notes [here](https://github.com/gcsizmadia/EgonsoftHU.E
 
 ## Autofac version
 
-This package references Autofac **4.9.4** nuget package but in your project you can use a newer version of Autofac.
+|EgonsoftHU.Extensions.DependencyInjection.Autofac|1.0.0 - 2.0.0|3.0.0|
+|:-|:-:|:-:|
+|Autofac.Extensions.DependencyInjection<br/>*dependency type:*|-|8.0.0<br/>*direct / top-level*|
+|Autofac<br/>*dependency type:*|4.9.4<br/>*direct / top-level*|6.4.0<br/>*indirect / transitive*|
+|Targeted .NET Framework|4.6.1+|4.7.2+|
 
-Tested with Autofac **6.4.0** nuget package.
+**Note:** .NET Framework target version changed because `Autofac.WebApi2` that can be used with `Autofac` 6+ is targeted only to .NET Framework 4.7.2.
 
 ## Summary
 
@@ -226,6 +232,12 @@ builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.DependencyModul
 
 If you need to access some external information (e.g. `IConfiguration`) inside a module for registering a service then you can inject it.
 
+Additionally, if you would like to use `IServiceCollection` extension methods inside your module then you can also inject an instance of it.
+
+**Note:**
+- Always create a new `IServiceCollection` instance for injection.
+- Do NOT inject the already existing instance from your `IHostBuilder`/`WebApplicationBuilder`/etc.
+
 Let's see the following example:
 
 ```csharp
@@ -237,9 +249,16 @@ builder
     .ConfigureContainer<ContainerBuilder>(
         (hostBuilderContext, containerBuilder) =>
         {
+            // This will be a shared instance for all modules.
+            //
+            // Always register a new instance because by the time the modules are executed
+            // the service registration in builder.Services are already populated into the containerBuilder.
+            IServiceCollection services = new ServiceCollection();
+
             containerBuilder
                 .UseDefaultAssemblyRegistry(nameof(Company))
                 .TreatModulesAsServices()
+                .RegisterModuleDependencyInstance(services)
                 .RegisterModuleDependencyInstance(hostBuilderContext.Configuration)
                 .RegisterModuleDependencyInstance(hostBuilderContext.HostingEnvironment)
                 .RegisterModule<EgonsoftHU.Extensions.DependencyInjection.DependencyModule>();
@@ -259,7 +278,8 @@ So your module has to have a public writable property with `T` type.
 
 ```csharp
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
+
+using EgonsoftHU.Extensions.Bcl;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -267,18 +287,17 @@ using Microsoft.Extensions.Hosting;
 
 public class DependencyModule : Module
 {
-    public IConfiguration Configuration { get; set; } = default!;
+    public IConfiguration? Configuration { get; set; }
+
+    public IServiceCollection? Services { get; set; }
 
     protected override void Load(ContainerBuilder builder)
     {
-        if (Configuration is null)
-        {
-            // Return or throw exception.
-        }
+        // EgonsoftHU.Extensions.Bcl nuget package
+        Configuration.ThrowIfNull();
+        Services.ThrowIfNull();
 
-        var services = new ServiceCollection();
-
-        services
+        Services
             .AddOptions<MyCustomOptions>()
             // Microsoft.Extensions.Options.ConfigurationExtensions nuget package
             .Bind(Configuration.GetSection("MyCustomOptions"))
@@ -287,10 +306,8 @@ public class DependencyModule : Module
             // Microsoft.Extensions.Hosting nuget package
             .ValidateOnStart();
 
-        // Autofac.Extensions.DependencyInjection nuget package
-        builder.Populate(services);
-
         // Now you can register a service type that requires IOptions<MyCustomOptions>
+        builder.RegisterType<CustomService>().As<ICustomService>().InstancePerLifetimeScope();
     }
 }
 ```
@@ -309,6 +326,7 @@ containerBuilder
             options.DependencyInjectionOption = ModuleDependencyInjectionOption.ConstructorInjection;
         }
     )
+    .RegisterModuleDependencyInstance(services)
     .RegisterModuleDependencyInstance(hostBuilderContext.Configuration)
     .RegisterModuleDependencyInstance(hostBuilderContext.HostingEnvironment)
     .RegisterModule<EgonsoftHU.Extensions.DependencyInjection.DependencyModule>();
@@ -326,18 +344,19 @@ Check out [`Examples.sln`](Examples.sln) that references the following projects 
 
 |Type|Project&nbsp;Name&nbsp;/&nbsp;Target&nbsp;Framework|Description|
 |:-:|-|-|
-|![C# Class Library](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library")![C# Class Library](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library")|`Company.Product.ComponentA.NetFx`<br/>.NET&nbsp;Framework&nbsp;4.8|Contains `ServiceA` and a `DependencyModule` that registers it.<br/><br/>`ConfigurationManager.AppSettings` is injected into `DependencyModule`.|
+|![C# Class Library](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library")![C# Class Library](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library")|`Company.Product.ComponentA.NetFx`<br/>.NET&nbsp;Framework&nbsp;4.7.2|Contains `ServiceA` and a `DependencyModule` that registers it.<br/><br/>`ConfigurationManager.AppSettings` is injected into `DependencyModule`.|
 |![C# Class Library](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library")![C# Class Library](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library")|`Company.Product.ComponentA.NetCore`<br/>.NET&nbsp;Core&nbsp;3.1|Contains `ServiceA` and a `DependencyModule` that registers it.<br/><br/>`IConfiguration` and `IHostEnvironment` are injected into `DependencyModule`.|
 |![C# Class Library](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library")![C# Class Library](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library")|`Company.Product.ComponentB`<br/>.NET&nbsp;Standard&nbsp;2.0|Contains `ServiceB` and a `DependencyModule` that registers it.|
-|![C# Web Application](images/light/CSWebApplication.png#gh-light-mode-only "C# Web Application")![C# Web Application](images/dark/CSWebApplication.png#gh-dark-mode-only "C# Web Application")|`Company.Product.NetFx.WebApi`<br/>.NET&nbsp;Framework&nbsp;4.8|Uses `ServiceA` and `ServiceB` and also contains and uses `ServiceC` and a `DependencyModule` that registers it.<br/><br/>`DefaultAssemblyRegistry` is configured to use `Serilog`.|
+|![C# Web Application](images/light/CSWebApplication.png#gh-light-mode-only "C# Web Application")![C# Web Application](images/dark/CSWebApplication.png#gh-dark-mode-only "C# Web Application")|`Company.Product.NetFx.WebApi`<br/>.NET&nbsp;Framework&nbsp;4.7.2|Uses `ServiceA` and `ServiceB` and also contains and uses `ServiceC` and a `DependencyModule` that registers it.<br/><br/>`DefaultAssemblyRegistry` is configured to use `Serilog`.|
 |![C# Web Application](images/light/CSWebApplication.png#gh-light-mode-only "C# Web Application")![C# Web Application](images/dark/CSWebApplication.png#gh-dark-mode-only "C# Web Application")|`Company.Product.NetCore.WebApi`<br/>.NET&nbsp;Core&nbsp;3.1|Uses `ServiceA` and `ServiceB` and also contains and uses `ServiceC` and a `DependencyModule` that registers it.<br/><br/>`DefaultAssemblyRegistry` is configured to use `Microsoft.Extensions.Logging`.|
 |![C# Web Application](images/light/CSWebApplication.png#gh-light-mode-only "C# Web Application")![C# Web Application](images/dark/CSWebApplication.png#gh-dark-mode-only "C# Web Application")|`Company.Product.Net6.WebApi`<br/>.NET&nbsp;6.0|Uses `ServiceA` and `ServiceB` and also contains and uses `ServiceC` and a `DependencyModule` that registers it.<br/><br/>`DefaultAssemblyRegistry` is configured to use `Serilog`.|
+|![C# MAUI Application](images/light/Maui.png#gh-light-mode-only "C# MAUI Application")![C# MAUI Application](images/dark/Maui.png#gh-dark-mode-only "C# MAUI Application")|`Company.Product.Net7.MauiClient`<br/>.NET&nbsp;7.0|Uses `ServiceA` and `ServiceB` and also contains and uses `ServiceC` and a `DependencyModule` that registers it.<br/><br/>`DefaultAssemblyRegistry` is not configured to use any logging framework.|
 
 ### Example output
 
 Navigating to the `~/api/tests` API endpoint should display this result:
 
-*.NET Framework 4.8*
+*.NET Framework 4.7.2*
 
 ```json
 {
@@ -403,3 +422,11 @@ Navigating to the `~/api/tests` API endpoint should display this result:
   ]
 }
 ```
+
+*.NET 7.0 + MAUI (Windows)*
+
+![C# MAUI Application on Windows](images/maui_win_example.png)
+
+*.NET 7.0 + MAUI (Android)*
+
+![C# MAUI Application on Android](images/maui_android_example.png)
