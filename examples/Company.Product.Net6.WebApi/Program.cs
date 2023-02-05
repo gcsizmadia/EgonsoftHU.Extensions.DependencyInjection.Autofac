@@ -9,8 +9,12 @@ using EgonsoftHU.Extensions.Logging;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 
 using Serilog;
+
+using ILogger = Serilog.ILogger;
 
 const string OutputTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss.fffffff zzz} [{Level:u3}] [{SourceContext}]::[{SourceMember}] {Message:lj}{NewLine}{Properties}{NewLine}{Exception}";
 
@@ -35,33 +39,36 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder
     .Host
-    .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-    .ConfigureContainer<ContainerBuilder>(
-        (hostBuilderContext, containerBuilder) =>
-        {
-            containerBuilder
-                .UseDefaultAssemblyRegistry(nameof(Company))
-                .TreatModulesAsServices()
-                .RegisterModuleDependencyInstance(hostBuilderContext.Configuration)
-                .RegisterModuleDependencyInstance(hostBuilderContext.HostingEnvironment)
-                .RegisterModule<DependencyModule>();
-        }
-    )
     .UseSerilog(
         (hostBuilderContext, services, loggerConfiguration) =>
         {
             loggerConfiguration
                 .ReadFrom.Configuration(hostBuilderContext.Configuration)
                 .ReadFrom.Services(services)
-                .Enrich.FromLogContext()
-                .WriteTo.Console(outputTemplate: OutputTemplate)
-                .WriteTo.Debug(outputTemplate: OutputTemplate);
+                .Enrich.FromLogContext();
+        }
+    )
+    .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+    .ConfigureContainer<ContainerBuilder>(
+        (hostBuilderContext, containerBuilder) =>
+        {
+            IServiceCollection services = new ServiceCollection();
+
+            containerBuilder
+                .UseDefaultAssemblyRegistry(nameof(Company))
+                .TreatModulesAsServices()
+                // Avoid overriding ILoggerFactory registration made by UseSerilog() extension method.
+                .ConfigureModuleOptions(options => options.OnModulesRegistered = _ => services.RemoveAll<ILoggerFactory>())
+                .RegisterModuleDependencyInstance(services)
+                .RegisterModuleDependencyInstance(hostBuilderContext.Configuration)
+                .RegisterModuleDependencyInstance(hostBuilderContext.HostingEnvironment)
+                .RegisterModule<DependencyModule>();
         }
     );
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddControllersAsServices();
 
 WebApplication app = builder.Build();
 

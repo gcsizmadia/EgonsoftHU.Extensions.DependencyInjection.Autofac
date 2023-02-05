@@ -9,9 +9,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{92F65356
 		examples\Directory.Build.props = examples\Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Company.Product.ComponentA.NetFx", "examples\Company.Product.ComponentA.NetFx\Company.Product.ComponentA.NetFx.csproj", "{663D2518-C5EF-46A8-A212-E590D38930DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Company.Product.ComponentA.NetFx", "examples\Company.Product.ComponentA.NetFx\Company.Product.ComponentA.NetFx.csproj", "{663D2518-C5EF-46A8-A212-E590D38930DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Company.Product.ComponentA.NetCore", "examples\Company.Product.ComponentA.NetCore\Company.Product.ComponentA.NetCore.csproj", "{D0B1A1DE-7313-4035-8A5D-337683A08EBC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Company.Product.ComponentA.NetCore", "examples\Company.Product.ComponentA.NetCore\Company.Product.ComponentA.NetCore.csproj", "{D0B1A1DE-7313-4035-8A5D-337683A08EBC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Company.Product.ComponentB", "examples\Company.Product.ComponentB\Company.Product.ComponentB.csproj", "{A56C093E-9F11-4579-9655-B8A7F640CAC7}"
 EndProject
@@ -19,7 +19,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Company.Product.NetFx.WebAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Company.Product.NetCore.WebApi", "examples\Company.Product.NetCore.WebApi\Company.Product.NetCore.WebApi.csproj", "{FF10E09C-F878-4183-B8CA-00465A4213C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Company.Product.Net6.WebApi", "examples\Company.Product.Net6.WebApi\Company.Product.Net6.WebApi.csproj", "{40F0CD1E-145F-4BE6-A547-13CE4C538F98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Company.Product.Net6.WebApi", "examples\Company.Product.Net6.WebApi\Company.Product.Net6.WebApi.csproj", "{40F0CD1E-145F-4BE6-A547-13CE4C538F98}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Company.Product.Net7.MauiClient", "examples\Company.Product.Net7.MauiClient\Company.Product.Net7.MauiClient.csproj", "{E7A4ED12-1BD0-4C83-A1E7-2F5227CB6E11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,12 @@ Global
 		{40F0CD1E-145F-4BE6-A547-13CE4C538F98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40F0CD1E-145F-4BE6-A547-13CE4C538F98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40F0CD1E-145F-4BE6-A547-13CE4C538F98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7A4ED12-1BD0-4C83-A1E7-2F5227CB6E11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7A4ED12-1BD0-4C83-A1E7-2F5227CB6E11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7A4ED12-1BD0-4C83-A1E7-2F5227CB6E11}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{E7A4ED12-1BD0-4C83-A1E7-2F5227CB6E11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7A4ED12-1BD0-4C83-A1E7-2F5227CB6E11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7A4ED12-1BD0-4C83-A1E7-2F5227CB6E11}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

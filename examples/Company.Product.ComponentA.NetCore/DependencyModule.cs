@@ -2,7 +2,6 @@
 // This code is licensed under MIT license (see LICENSE for details)
 
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,30 +15,37 @@ namespace Company.Product.ComponentA.NetCore
 
         public IHostEnvironment? HostEnvironment { get; set; }
 
+        public IServiceCollection? Services { get; set; }
+
         /// <summary>
         /// Registers services of ComponentA.
         /// </summary>
         /// <param name="builder">The builder through which components can be registered.</param>
         protected override void Load(ContainerBuilder builder)
         {
-            var services = new ServiceCollection();
-
-            if (Configuration is not null)
+            if (Configuration is not null && Services is not null)
             {
-                services
+                Services
                     .AddOptions<ServiceAOptions>()
                     .Bind(Configuration.GetSection(nameof(ServiceA)))
                     .ValidateDataAnnotations()
                     .ValidateOnStart();
             }
 
-            builder.Populate(services);
-
             builder
                 .RegisterType<ServiceA>()
                 .AsSelf()
                 .SingleInstance()
-                .WithParameter(new NamedParameter("environmentName", HostEnvironment?.EnvironmentName ?? "N/A"));
+                .WithParameter(
+                    new NamedParameter(
+                        "environmentName",
+                        HostEnvironment?.EnvironmentName
+                        ??
+                        Configuration?.GetValue<string?>(nameof(IHostEnvironment.EnvironmentName))
+                        ??
+                        "N/A"
+                    )
+                );
         }
     }
 }

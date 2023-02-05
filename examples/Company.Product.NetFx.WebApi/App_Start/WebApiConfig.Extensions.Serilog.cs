@@ -17,6 +17,7 @@ namespace Company.Product.NetFx.WebApi
             Log.Logger =
                 new LoggerConfiguration()
                     .MinimumLevel.Verbose()
+                    .Enrich.FromLogContext()
                     .WriteTo.Console(outputTemplate: OutputTemplate)
                     .WriteTo.Debug(outputTemplate: OutputTemplate)
                     .CreateLogger();

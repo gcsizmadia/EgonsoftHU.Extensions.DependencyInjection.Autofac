@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -9,11 +9,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Description>ComponentA (net48)</Description>
+    <Description>ComponentA (net472)</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.9.4" />
+    <PackageReference Include="Autofac" Version="6.5.0" />
   </ItemGroup>
 
 </Project>

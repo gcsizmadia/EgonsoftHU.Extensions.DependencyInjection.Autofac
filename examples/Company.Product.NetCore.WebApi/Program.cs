@@ -7,6 +7,7 @@ using Autofac.Extensions.DependencyInjection;
 using EgonsoftHU.Extensions.DependencyInjection;
 
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -46,9 +47,12 @@ namespace Company.Product.NetCore.WebApi
                     .ConfigureContainer<ContainerBuilder>(
                         (hostBuilderContext, builder) =>
                         {
+                            IServiceCollection services = new ServiceCollection();
+
                             builder
                                 .UseDefaultAssemblyRegistry(nameof(Company))
                                 .TreatModulesAsServices()
+                                .RegisterModuleDependencyInstance(services)
                                 .RegisterModuleDependencyInstance(hostBuilderContext.Configuration)
                                 .RegisterModuleDependencyInstance(hostBuilderContext.HostingEnvironment)
                                 .RegisterModule<DependencyModule>();
