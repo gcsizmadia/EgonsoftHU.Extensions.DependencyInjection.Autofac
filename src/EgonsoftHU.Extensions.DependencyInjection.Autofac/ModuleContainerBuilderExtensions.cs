@@ -4,6 +4,7 @@
 using System;
 
 using Autofac;
+using Autofac.Core;
 
 using EgonsoftHU.Extensions.Bcl;
 
@@ -15,7 +16,7 @@ namespace EgonsoftHU.Extensions.DependencyInjection
     public static class ModuleContainerBuilderExtensions
     {
         /// <summary>
-        /// Treats discovered <see cref="Module"/> types as services, i.e.,<br/>
+        /// Treats discovered <see cref="IModule"/> types as services, i.e.,<br/>
         /// - modules will be registered in a separate, temporary container,<br/>
         /// - modules can have dependencies,<br/>
         /// - dependencies (e.g., IConfiguration, IHostEnvironment etc.) can be registered into that container,<br/>
@@ -54,7 +55,7 @@ namespace EgonsoftHU.Extensions.DependencyInjection
             builder.ThrowIfNull();
             setupAction.ThrowIfNull();
 
-            var options = new ModuleOptions();
+            var options = new ModuleOptions(DependencyModule.ModuleOptions);
             setupAction.Invoke(options);
 
             bool isCorrectSetup =
@@ -79,7 +80,7 @@ namespace EgonsoftHU.Extensions.DependencyInjection
 
             if (options.TreatModulesAsServices)
             {
-                DependencyModule.ModulesContainerBuilder = new();
+                DependencyModule.ModulesContainerBuilder ??= new();
             }
 
             return builder;
@@ -103,10 +104,9 @@ namespace EgonsoftHU.Extensions.DependencyInjection
             builder.ThrowIfNull();
             instance.ThrowIfNull();
 
-            DependencyModule
-                .ModulesContainerBuilder
-                .RegisterInstance(instance)
-                .ExternallyOwned();
+            DependencyModule.RegisterModuleDependencyInstanceActions.Add(
+                containerBuilder => containerBuilder.RegisterInstance(instance).ExternallyOwned()
+            );
 
             return builder;
         }

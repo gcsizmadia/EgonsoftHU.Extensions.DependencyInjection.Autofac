@@ -9,6 +9,9 @@ using System.Reflection;
 
 using Autofac;
 using Autofac.Core;
+using Autofac.Extensions.DependencyInjection;
+
+using Microsoft.Extensions.DependencyInjection;
 
 using Module = Autofac.Module;
 
@@ -26,6 +29,7 @@ namespace EgonsoftHU.Extensions.DependencyInjection
 
         internal static ModuleOptions ModuleOptions = new();
         internal static ContainerBuilder? ModulesContainerBuilder;
+        internal static readonly List<Action<ContainerBuilder>> RegisterModuleDependencyInstanceActions = new();
 
         /// <inheritdoc/>
         protected override void Load(ContainerBuilder builder)
@@ -50,7 +54,7 @@ namespace EgonsoftHU.Extensions.DependencyInjection
             {
                 if (assembliesSelector.Invoke() is IEnumerable<Assembly> selectedAssemblies)
                 {
-                    assemblies = ExcludeThisAssembly(selectedAssemblies);
+                    assemblies = selectedAssemblies.Where(assembly => assembly != ThisAssembly).ToArray();
                     return true;
                 }
             }
@@ -58,9 +62,10 @@ namespace EgonsoftHU.Extensions.DependencyInjection
             return false;
         }
 
-        private Assembly[] ExcludeThisAssembly(IEnumerable<Assembly> assemblies)
+        [MemberNotNullWhen(true, nameof(ModulesContainerBuilder))]
+        private static bool ShouldTreatModulesAsServices()
         {
-            return assemblies.Where(assembly => assembly != ThisAssembly).ToArray();
+            return ModuleOptions.TreatModulesAsServices;
         }
 
         private static void RegisterAssemblyModules(ContainerBuilder builder, Assembly[] assemblies)
@@ -68,6 +73,45 @@ namespace EgonsoftHU.Extensions.DependencyInjection
             if (!ShouldTreatModulesAsServices())
             {
                 builder.RegisterAssemblyModules(assemblies);
+                return;
+            }
+
+            RegisterModuleDependencies();
+
+            RegisterModules(assemblies);
+
+            using IContainer modulesContainer = ModulesContainerBuilder.Build();
+
+            IEnumerable<IModule> modules = modulesContainer.Resolve<IEnumerable<IModule>>();
+            IServiceCollection? services = modulesContainer.ResolveOptional<IServiceCollection>();
+
+            builder.RegisterCallback(
+                componentRegistryBuilder =>
+                {
+                    modules.ToList().ForEach(module => module.Configure(componentRegistryBuilder));
+
+                    if (services is not null || ModuleOptions.OnModulesRegistered is not null)
+                    {
+                        new ServiceCollectionDependencyModule(services, ModuleOptions.OnModulesRegistered).Configure(componentRegistryBuilder);
+                    }
+                }
+            );
+        }
+
+        private static void RegisterModuleDependencies()
+        {
+            if (!ShouldTreatModulesAsServices())
+            {
+                return;
+            }
+
+            RegisterModuleDependencyInstanceActions.ForEach(action => action.Invoke(ModulesContainerBuilder));
+        }
+
+        private static void RegisterModules(Assembly[] assemblies)
+        {
+            if (!ShouldTreatModulesAsServices())
+            {
                 return;
             }
 
@@ -97,19 +141,6 @@ namespace EgonsoftHU.Extensions.DependencyInjection
                         break;
                 }
             }
-
-            using IContainer modulesContainer = ModulesContainerBuilder.Build();
-
-            foreach (IModule module in modulesContainer.Resolve<IEnumerable<IModule>>())
-            {
-                builder.RegisterModule(module);
-            }
-        }
-
-        [MemberNotNullWhen(true, nameof(ModulesContainerBuilder))]
-        private static bool ShouldTreatModulesAsServices()
-        {
-            return ModuleOptions.TreatModulesAsServices;
         }
 
         private static Type[] GetModuleTypes(IEnumerable<Assembly> assemblies)
@@ -124,6 +155,28 @@ namespace EgonsoftHU.Extensions.DependencyInjection
                             .Select(typeInfo => typeInfo.AsType())
                     )
                     .ToArray();
+        }
+
+        private sealed class ServiceCollectionDependencyModule : Module
+        {
+            private readonly IServiceCollection? services;
+            private readonly Action<ContainerBuilder>? action;
+
+            public ServiceCollectionDependencyModule(IServiceCollection? services, Action<ContainerBuilder>? action)
+            {
+                this.services = services;
+                this.action = action;
+            }
+
+            protected override void Load(ContainerBuilder builder)
+            {
+                action?.Invoke(builder);
+
+                if (services is not null)
+                {
+                    builder.Populate(services);
+                }
+            }
         }
     }
 }
