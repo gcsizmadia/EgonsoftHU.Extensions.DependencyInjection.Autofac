@@ -1,4 +1,4 @@
-// Copyright � 2022 Gabor Csizmadia
+﻿// Copyright © 2022-2024 Gabor Csizmadia
 // This code is licensed under MIT license (see LICENSE for details)
 
 using System.Linq;
@@ -17,66 +17,67 @@ using Microsoft.Maui.Controls;
 
 using ILogger = Serilog.ILogger;
 
-namespace Company.Product.Net7.MauiClient.Views;
-
-public partial class DependencyInjectionTestPage : ContentPage
+namespace Company.Product.Net7.MauiClient.Views
 {
-    private readonly ServiceA serviceA;
-    private readonly ServiceB serviceB;
-    private readonly ServiceC serviceC;
-    private readonly ILogger logger;
-
-    public DependencyInjectionTestPage(ServiceA serviceA, ServiceB serviceB, ServiceC serviceC, ILogger logger)
+    public partial class DependencyInjectionTestPage : ContentPage
     {
-        this.serviceA = serviceA;
-        this.serviceB = serviceB;
-        this.serviceC = serviceC;
-        this.logger = logger;
+        private readonly ServiceA serviceA;
+        private readonly ServiceB serviceB;
+        private readonly ServiceC serviceC;
+        private readonly ILogger logger;
 
-        InitializeComponent();
-    }
-
-    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
-    {
-        DefaultAssemblyRegistry.Current.ThrowIfNull();
-
-        AppInfo.Source = GetWebViewSource("Getting info...");
-
-        await Task.Delay(1000);
-
-        var info =
-            new
-            {
-                ServiceA = serviceA.GetData(),
-                ServiceB = serviceB.GetMessage(),
-                ServiceC = serviceC.GetMessage(),
-                Assemblies =
-                    DefaultAssemblyRegistry
-                        .Current
-                        .GetAssemblies()
-                        .Select(assembly => assembly.GetName().FullName)
-                        .ToList()
-            };
-
-        logger.Here().Verbose("Info=[{@Info}]", info);
-
-        string appInfo =
-            JsonSerializer.Serialize(
-                info,
-                new JsonSerializerOptions(JsonSerializerDefaults.Web)
-                {
-                    WriteIndented = true
-                }
-            );
-
-        AppInfo.Source = GetWebViewSource(appInfo);
-    }
-
-    private static HtmlWebViewSource GetWebViewSource(string content)
-    {
-        return new HtmlWebViewSource()
+        public DependencyInjectionTestPage(ServiceA serviceA, ServiceB serviceB, ServiceC serviceC, ILogger logger)
         {
-            Html = $"<!DOCTYPE html><html><head><title>Dependency Injection Test</title></head><body><pre>{content}</pre></body></html>"
-        };
+            this.serviceA = serviceA;
+            this.serviceB = serviceB;
+            this.serviceC = serviceC;
+            this.logger = logger;
+
+            InitializeComponent();
+        }
+
+        protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+        {
+            DefaultAssemblyRegistry.Current.ThrowIfNull();
+
+            AppInfo.Source = GetWebViewSource("Getting info...");
+
+            await Task.Delay(1000);
+
+            var info =
+                new
+                {
+                    ServiceA = serviceA.GetData(),
+                    ServiceB = serviceB.GetMessage(),
+                    ServiceC = serviceC.GetMessage(),
+                    Assemblies =
+                        DefaultAssemblyRegistry
+                            .Current
+                            .GetAssemblies()
+                            .Select(assembly => assembly.GetName().FullName)
+                            .ToList()
+                };
+
+            logger.Here().Verbose("Info=[{@Info}]", info);
+
+            string appInfo =
+                JsonSerializer.Serialize(
+                    info,
+                    new JsonSerializerOptions(JsonSerializerDefaults.Web)
+                    {
+                        WriteIndented = true
+                    }
+                );
+
+            AppInfo.Source = GetWebViewSource(appInfo);
+        }
+
+        private static HtmlWebViewSource GetWebViewSource(string content)
+        {
+            return new HtmlWebViewSource()
+            {
+                Html = $"<!DOCTYPE html><html><head><title>Dependency Injection Test</title></head><body><pre>{content}</pre></body></html>"
+            };
+        }
     }
 }

@@ -7,7 +7,7 @@ using Serilog;
 
 namespace Company.Product.NetFx.WebApi
 {
-    partial class WebApiConfig
+    public partial class WebApiConfig
     {
         public static void ConfigureSerilog(this HttpConfiguration _)
         {

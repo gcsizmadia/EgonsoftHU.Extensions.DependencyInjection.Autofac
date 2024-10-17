@@ -15,7 +15,7 @@ using Serilog;
 
 namespace Company.Product.NetFx.WebApi
 {
-    partial class WebApiConfig
+    public partial class WebApiConfig
     {
         /// <summary>
         /// Configures Autofac as the dependency resolver for the current ASP.NET Web API application.
