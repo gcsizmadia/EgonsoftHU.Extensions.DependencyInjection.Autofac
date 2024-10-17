@@ -3,19 +3,24 @@
     <TargetFrameworks>netstandard2.0;netstandard2.1;net472;netcoreapp3.1;net6.0</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup>
+    <IsPackable>true</IsPackable>
     <PackageId>EgonsoftHU.Extensions.DependencyInjection.Autofac</PackageId>
     <VersionPrefix>3.0.0</VersionPrefix>
-    <VersionSuffix></VersionSuffix>
-    <Authors>Gabor Csizmadia</Authors>
-    <Owners>Egonsoft.HU</Owners>
+    <!--
+    <VersionSuffix>$([System.String]::Format('prerelease-{0:000}-{1:0000}', $([System.DateTime]::Now.DayOfYear), $([System.Math]::Floor($([System.DateTime]::Now.TimeOfDay.TotalMinutes)))))</VersionSuffix>
+    -->
+    <!--
+    <Authors></Authors>
+    <Owners></Owners>
+    -->
     <Title>Egonsoft.HU DependencyInjection Extensions for Autofac</Title>
     <Description>A dependency module (derived from Autofac.Module) that discovers and registers all other dependency modules (derived from Autofac.Module). The dependency modules can also have shared dependencies injected into them, e.g. IConfiguration, IHostEnvironment and even IServiceCollection, see Module Dependencies - injection into modules section in README.md for details.</Description>
     <Summary>A dependency module (derived from Autofac.Module) that discovers and registers all other dependency modules (derived from Autofac.Module). The dependency modules can also have shared dependencies injected into them, e.g. IConfiguration, IHostEnvironment and even IServiceCollection, see Module Dependencies - injection into modules section in README.md for details.</Summary>
     <!--
     <Copyright></Copyright>
+    <PackageRequireLicenseAcceptance></PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression></PackageLicenseExpression>
     -->
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/gcsizmadia/EgonsoftHU.Extensions.DependencyInjection.Autofac</PackageProjectUrl>
     <!--
     <PackageIcon></PackageIcon>
@@ -26,14 +31,14 @@
     <PackageReleaseNotes>Please visit https://github.com/gcsizmadia/EgonsoftHU.Extensions.DependencyInjection.Autofac/releases to view the release notes.</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RepositoryUrl>https://github.com/gcsizmadia/EgonsoftHU.Extensions.DependencyInjection.Autofac.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
     <!--
+    <RepositoryType></RepositoryType>
     <RepositoryBranch></RepositoryBranch>
     <RepositoryCommit></RepositoryCommit>
+    <PackageType></PackageType>
+    <DevelopmentDependency></DevelopmentDependency>
+    <MinClientVersion></MinClientVersion>
     -->
-    <PackageType>Dependency</PackageType>
-    <DevelopmentDependency>false</DevelopmentDependency>
-    <MinClientVersion>4.7.0</MinClientVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
