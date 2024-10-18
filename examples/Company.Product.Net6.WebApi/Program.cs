@@ -5,86 +5,86 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 
 using EgonsoftHU.Extensions.DependencyInjection;
-using EgonsoftHU.Extensions.Logging;
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
-using Serilog;
+ConfigureDefaultAssemblyRegistry();
 
-using ILogger = Serilog.ILogger;
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-namespace Company.Product.Net6.WebApi
-{
-    internal class Program
-    {
-        private static void Main(string[] args)
+builder
+    .Host
+    .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+    .ConfigureContainer<ContainerBuilder>(
+        (hostBuilderContext, containerBuilder) =>
         {
-            const string OutputTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss.fffffff zzz} [{Level:u3}] [{SourceContext}]::[{SourceMember}] {Message:lj}{NewLine}{Properties}{NewLine}{Exception}";
+            IServiceCollection services = new ServiceCollection();
 
-            Log.Logger =
-                new LoggerConfiguration()
-                    .MinimumLevel.Verbose()
-                    .Enrich.FromLogContext()
-                    .WriteTo.Console(outputTemplate: OutputTemplate)
-                    .WriteTo.Debug(outputTemplate: OutputTemplate)
-                    .CreateBootstrapLogger();
+            containerBuilder
+                .UseDefaultAssemblyRegistry(nameof(Company))
+                .TreatModulesAsServices()
+                .RegisterModuleDependencyInstance(services)
+                .RegisterModuleDependencyInstance(hostBuilderContext.Configuration)
+                .RegisterModuleDependencyInstance(hostBuilderContext.HostingEnvironment)
+                .RegisterModule<DependencyModule>();
+        }
+    );
 
-            ILogger logger = Log.Logger.ForContext<DefaultAssemblyRegistry>();
+builder.Services.AddControllers().AddControllersAsServices();
 
-            DefaultAssemblyRegistry.ConfigureLogging(
-                logEvent =>
-                logger
-                    .ForContext(PropertyBagEnricher.Create().AddRange(logEvent.Properties))
-                    .Verbose(logEvent.MessageTemplate.Structured, logEvent.Arguments)
+WebApplication app = builder.Build();
+
+app
+    .UseRouting()
+    .UseAuthorization()
+    .UseEndpoints(
+        endpoints =>
+        {
+            endpoints.MapGet(
+                "/",
+                async context =>
+                {
+                    await context.Response.WriteAsync("Hello World!");
+                }
             );
 
-            WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-
-            builder
-                .Host
-                .UseSerilog(
-                    (hostBuilderContext, services, loggerConfiguration) =>
-                    {
-                        loggerConfiguration
-                            .ReadFrom.Configuration(hostBuilderContext.Configuration)
-                            .ReadFrom.Services(services)
-                            .Enrich.FromLogContext();
-                    }
-                )
-                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureContainer<ContainerBuilder>(
-                    (hostBuilderContext, containerBuilder) =>
-                    {
-                        IServiceCollection services = new ServiceCollection();
-
-                        containerBuilder
-                            .UseDefaultAssemblyRegistry(nameof(Company))
-                            .TreatModulesAsServices()
-                            // Avoid overriding ILoggerFactory registration made by UseSerilog() extension method.
-                            .ConfigureModuleOptions(options => options.OnModulesRegistered = _ => services.RemoveAll<ILoggerFactory>())
-                            .RegisterModuleDependencyInstance(services)
-                            .RegisterModuleDependencyInstance(hostBuilderContext.Configuration)
-                            .RegisterModuleDependencyInstance(hostBuilderContext.HostingEnvironment)
-                            .RegisterModule<DependencyModule>();
-                    }
-                );
-
-            // Add services to the container.
-
-            builder.Services.AddControllers().AddControllersAsServices();
-
-            WebApplication app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-
-            app.UseAuthorization();
-
-            app.MapControllers();
-
-            app.Run();
+            endpoints.MapControllers();
         }
-    }
+    );
+
+app.Run();
+
+static void ConfigureDefaultAssemblyRegistry()
+{
+    ILoggerFactory loggerFactory = LoggerFactory.Create(
+        loggingBuilder =>
+        loggingBuilder
+            .SetMinimumLevel(LogLevel.Debug)
+            .AddJsonConsole(
+                options =>
+                {
+                    options.IncludeScopes = true;
+                    options.JsonWriterOptions = new() { Indented = true };
+                }
+            )
+            .AddDebug()
+    );
+
+    DefaultAssemblyRegistry.ConfigureLogging(
+        logEvent =>
+        {
+            ILogger logger = loggerFactory.CreateLogger<DefaultAssemblyRegistry>();
+
+            using (logger.BeginScope(logEvent.Properties))
+            {
+#pragma warning disable CA2254 // Template should be a static expression
+                logger.LogDebug(logEvent.MessageTemplate.Structured, logEvent.Arguments);
+#pragma warning restore CA2254 // Template should be a static expression
+            }
+        },
+        LoggingLibrary.MicrosoftExtensionsLogging
+    );
 }

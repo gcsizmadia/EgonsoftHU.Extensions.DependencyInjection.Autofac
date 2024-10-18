@@ -14,8 +14,6 @@
 
   <ItemGroup>
     <PackageReference Include="EgonsoftHU.Extensions.DependencyInjection.Autofac" Version="3.0.0" />
-    <PackageReference Include="EgonsoftHU.Extensions.Logging.Serilog" Version="2.0.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
   </ItemGroup>
 
   <ItemGroup>
