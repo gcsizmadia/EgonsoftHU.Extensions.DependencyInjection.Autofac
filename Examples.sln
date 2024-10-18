@@ -17,11 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Company.Product.ComponentB"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Company.Product.NetFx.WebApi", "examples\Company.Product.NetFx.WebApi\Company.Product.NetFx.WebApi.csproj", "{4B313CC0-1761-4A13-994C-A62A04D61577}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Company.Product.NetCore.WebApi", "examples\Company.Product.NetCore.WebApi\Company.Product.NetCore.WebApi.csproj", "{FF10E09C-F878-4183-B8CA-00465A4213C2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Company.Product.Net6.WebApi", "examples\Company.Product.Net6.WebApi\Company.Product.Net6.WebApi.csproj", "{40F0CD1E-145F-4BE6-A547-13CE4C538F98}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Company.Product.Net7.MauiClient", "examples\Company.Product.Net7.MauiClient\Company.Product.Net7.MauiClient.csproj", "{E7A4ED12-1BD0-4C83-A1E7-2F5227CB6E11}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Company.Product.Net8.WebApi", "examples\Company.Product.Net8.WebApi\Company.Product.Net8.WebApi.csproj", "{AE39367A-B2DB-4144-AF33-2BB557D73222}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Company.Product.Net8.MauiClient", "examples\Company.Product.Net8.MauiClient\Company.Product.Net8.MauiClient.csproj", "{5021BBE7-D8F6-45E1-8966-E98039C7E2E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,20 +45,20 @@ Global
 		{4B313CC0-1761-4A13-994C-A62A04D61577}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B313CC0-1761-4A13-994C-A62A04D61577}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B313CC0-1761-4A13-994C-A62A04D61577}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FF10E09C-F878-4183-B8CA-00465A4213C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FF10E09C-F878-4183-B8CA-00465A4213C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FF10E09C-F878-4183-B8CA-00465A4213C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FF10E09C-F878-4183-B8CA-00465A4213C2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{40F0CD1E-145F-4BE6-A547-13CE4C538F98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{40F0CD1E-145F-4BE6-A547-13CE4C538F98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40F0CD1E-145F-4BE6-A547-13CE4C538F98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40F0CD1E-145F-4BE6-A547-13CE4C538F98}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E7A4ED12-1BD0-4C83-A1E7-2F5227CB6E11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E7A4ED12-1BD0-4C83-A1E7-2F5227CB6E11}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E7A4ED12-1BD0-4C83-A1E7-2F5227CB6E11}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{E7A4ED12-1BD0-4C83-A1E7-2F5227CB6E11}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E7A4ED12-1BD0-4C83-A1E7-2F5227CB6E11}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E7A4ED12-1BD0-4C83-A1E7-2F5227CB6E11}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{AE39367A-B2DB-4144-AF33-2BB557D73222}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE39367A-B2DB-4144-AF33-2BB557D73222}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE39367A-B2DB-4144-AF33-2BB557D73222}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE39367A-B2DB-4144-AF33-2BB557D73222}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5021BBE7-D8F6-45E1-8966-E98039C7E2E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5021BBE7-D8F6-45E1-8966-E98039C7E2E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5021BBE7-D8F6-45E1-8966-E98039C7E2E9}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5021BBE7-D8F6-45E1-8966-E98039C7E2E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5021BBE7-D8F6-45E1-8966-E98039C7E2E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5021BBE7-D8F6-45E1-8966-E98039C7E2E9}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
