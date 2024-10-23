@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EgonsoftHU.Extensions.DependencyInjection.Autofac" Version="4.0.0-prerelease-297-1348" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Company.Product.ComponentA.Net6\Company.Product.ComponentA.Net6.csproj" />
+    <ProjectReference Include="..\Company.Product.ComponentC.NetStandard\Company.Product.ComponentC.NetStandard.csproj" />
+  </ItemGroup>
+
+</Project>

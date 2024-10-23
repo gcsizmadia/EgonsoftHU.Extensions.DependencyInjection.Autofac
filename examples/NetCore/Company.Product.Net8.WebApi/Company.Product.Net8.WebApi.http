@@ -1,0 +1,6 @@
+@Company.Product.Net8.WebApi_HostAddress = http://localhost:5062
+
+GET {{Company.Product.Net8.WebApi_HostAddress}}/api/tests/
+Accept: application/json
+
+###
