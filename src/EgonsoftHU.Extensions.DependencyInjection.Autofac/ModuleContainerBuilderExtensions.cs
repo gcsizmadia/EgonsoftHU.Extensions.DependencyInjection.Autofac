@@ -65,7 +65,12 @@ namespace EgonsoftHU.Extensions.DependencyInjection
 
             if (!isCorrectSetup)
             {
-                var ex = new ArgumentException("Invalid module options configuration. See Data[\"ErrorReason\"] for details.", nameof(setupAction));
+                var ex =
+                    new ArgumentException(
+                        "Invalid module options configuration. See Data[\"ErrorReason\"] for details.",
+                        nameof(setupAction)
+                    );
+
                 ex.Data[nameof(ModuleOptions.TreatModulesAsServices)] = options.TreatModulesAsServices;
                 ex.Data[nameof(ModuleOptions.DependencyInjectionOption)] = options.DependencyInjectionOption;
                 ex.Data["ErrorReason"] =
