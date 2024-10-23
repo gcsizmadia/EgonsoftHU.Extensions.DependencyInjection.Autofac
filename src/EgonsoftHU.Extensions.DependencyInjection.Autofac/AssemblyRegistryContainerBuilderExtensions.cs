@@ -107,10 +107,13 @@ namespace EgonsoftHU.Extensions.DependencyInjection
         /// <remarks>
         /// The file name pattern for searching assembly files will be the following: <c>[prefix].*.dll</c>
         /// <para>
+        /// Note: <c>EgonsoftHU</c> will be automatically added to the <paramref name="assemblyFileNamePrefixes"/> collection.
+        /// </para>
+        /// <para>
         /// Calling
-        /// <br/><c>AssemblyRegistryConfiguration.UseDefaultAssemblyRegistry("MyCompany");</c>
-        /// <br/><br/>will search for assemblies with this file name pattern:
-        /// <br/><c>MyCompany.*.dll</c>
+        /// <br/><c>ContainerBuilder.UseDefaultAssemblyRegistry("MyCompany");</c>
+        /// <br/><br/>will search for assemblies with these file name patterns:
+        /// <br/><c>MyCompany.*.dll</c> and <c>EgonsoftHU.*.dll</c>
         /// </para>
         /// </remarks>
         /// <returns>The <see cref="ContainerBuilder"/> so that additional calls can be chained.</returns>
@@ -120,7 +123,12 @@ namespace EgonsoftHU.Extensions.DependencyInjection
 
             builder.ThrowIfNull();
 
-            DependencyModule.AssemblyRegistryTypedInstance = DefaultAssemblyRegistry.Initialize(assemblyFileNamePrefixes);
+            string[] prefixes =
+                assemblyFileNamePrefixes
+                    .Union(nameof(EgonsoftHU).AsSingleElementSequence())
+                    .ToArray();
+
+            DependencyModule.AssemblyRegistryTypedInstance = DefaultAssemblyRegistry.Initialize(prefixes);
 
             return builder;
         }
