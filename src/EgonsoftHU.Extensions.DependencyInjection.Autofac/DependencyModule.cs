@@ -11,6 +11,8 @@ using Autofac;
 using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
 
+using EgonsoftHU.Extensions.Bcl;
+
 using Microsoft.Extensions.DependencyInjection;
 
 using Module = Autofac.Module;
@@ -22,14 +24,25 @@ namespace EgonsoftHU.Extensions.DependencyInjection
     /// </summary>
     public class DependencyModule : Module
     {
-        internal static IAssemblyRegistry? AssemblyRegistryTypedInstance;
+        internal static IAssemblyRegistry? AssemblyRegistryTypedInstance { private get; set; }
 
-        internal static object? AssemblyRegistryCustomInstance;
-        internal static MethodInfo? GetAssembliesMethod;
+        internal static object? AssemblyRegistryCustomInstance { private get; set; }
 
-        internal static ModuleOptions ModuleOptions = new();
-        internal static ContainerBuilder? ModulesContainerBuilder;
-        internal static readonly List<Action<ContainerBuilder>> RegisterModuleDependencyInstanceActions = new();
+        internal static MethodInfo? GetAssembliesMethod { get; set; }
+
+        internal static ModuleOptions ModuleOptions { get; set; } = new();
+
+        internal static ContainerBuilder? ModulesContainerBuilder { get; set; }
+
+        internal static readonly List<Action<ContainerBuilder>> RegisterModuleDependencyInstanceActions =
+#if LANGVERSION12_0_OR_GREATER
+            []
+#else
+            new()
+#endif
+            ;
+
+        internal static IServiceCollection AlreadyPopulatedServices { get; set; } = new ServiceCollection();
 
         /// <inheritdoc/>
         protected override void Load(ContainerBuilder builder)
@@ -83,17 +96,23 @@ namespace EgonsoftHU.Extensions.DependencyInjection
             using IContainer modulesContainer = ModulesContainerBuilder.Build();
 
             IEnumerable<IModule> modules = modulesContainer.Resolve<IEnumerable<IModule>>();
-            IServiceCollection? services = modulesContainer.ResolveOptional<IServiceCollection>();
+            IServiceCollection services = modulesContainer.Resolve<IServiceCollection>();
 
             builder.RegisterCallback(
                 componentRegistryBuilder =>
                 {
                     modules.ToList().ForEach(module => module.Configure(componentRegistryBuilder));
 
-                    if (services is not null || ModuleOptions.OnModulesRegistered is not null)
+                    if (typeof(SharedServiceCollection) == services.GetType())
                     {
-                        new ServiceCollectionDependencyModule(services, ModuleOptions.OnModulesRegistered).Configure(componentRegistryBuilder);
+                        var servicesAddedByModules = new ServiceCollection();
+                        servicesAddedByModules.AddRange(services.Except(AlreadyPopulatedServices));
+
+                        services = servicesAddedByModules;
                     }
+
+                    new ServiceCollectionDependencyModule(services, ModuleOptions.OnModulesRegistered)
+                        .Configure(componentRegistryBuilder);
                 }
             );
         }
@@ -106,6 +125,13 @@ namespace EgonsoftHU.Extensions.DependencyInjection
             }
 
             RegisterModuleDependencyInstanceActions.ForEach(action => action.Invoke(ModulesContainerBuilder));
+
+            var serviceCollection = new SharedServiceCollection();
+            serviceCollection.AddRange(AlreadyPopulatedServices);
+
+            ModulesContainerBuilder
+                .RegisterInstance<IServiceCollection>(serviceCollection)
+                .IfNotRegistered(typeof(IServiceCollection));
         }
 
         private static void RegisterModules(Assembly[] assemblies)
@@ -159,10 +185,10 @@ namespace EgonsoftHU.Extensions.DependencyInjection
 
         private sealed class ServiceCollectionDependencyModule : Module
         {
-            private readonly IServiceCollection? services;
+            private readonly IServiceCollection services;
             private readonly Action<ContainerBuilder>? action;
 
-            public ServiceCollectionDependencyModule(IServiceCollection? services, Action<ContainerBuilder>? action)
+            public ServiceCollectionDependencyModule(IServiceCollection services, Action<ContainerBuilder>? action)
             {
                 this.services = services;
                 this.action = action;
@@ -172,10 +198,7 @@ namespace EgonsoftHU.Extensions.DependencyInjection
             {
                 action?.Invoke(builder);
 
-                if (services is not null)
-                {
-                    builder.Populate(services);
-                }
+                builder.Populate(services);
             }
         }
     }
