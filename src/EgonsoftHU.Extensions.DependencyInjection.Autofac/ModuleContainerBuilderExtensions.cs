@@ -109,6 +109,21 @@ namespace EgonsoftHU.Extensions.DependencyInjection
             builder.ThrowIfNull();
             instance.ThrowIfNull();
 
+            bool treatModulesAsServices = DependencyModule.ModuleOptions.TreatModulesAsServices;
+
+            if (!treatModulesAsServices)
+            {
+                var ex =
+                    new InvalidOperationException(
+                        "Register module dependency instance failed. See Data[\"ErrorReason\"] for details."
+                    );
+
+                ex.Data[nameof(ModuleOptions.TreatModulesAsServices)] = treatModulesAsServices;
+                ex.Data["ErrorReason"] = "TreatModulesAsServices must be true.";
+
+                throw ex;
+            }
+
             DependencyModule.RegisterModuleDependencyInstanceActions.Add(
                 containerBuilder => containerBuilder.RegisterInstance(instance).ExternallyOwned()
             );
