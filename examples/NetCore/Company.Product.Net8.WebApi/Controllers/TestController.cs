@@ -1,7 +1,6 @@
 ﻿// Copyright © 2022-2024 Gabor Csizmadia
 // This code is licensed under MIT license (see LICENSE for details)
 
-using System.Diagnostics;
 using System.Linq;
 
 using Company.Product.ComponentA.Net6;
@@ -11,9 +10,11 @@ using Company.Product.Net8.WebApi.Services;
 
 using EgonsoftHU.Extensions.Bcl;
 using EgonsoftHU.Extensions.DependencyInjection;
+using EgonsoftHU.Extensions.Logging;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+
+using Serilog;
 
 namespace Company.Product.Net8.WebApi.Controllers
 {
@@ -49,11 +50,11 @@ namespace Company.Product.Net8.WebApi.Controllers
         /// <returns>an object with the welcome messages.</returns>
         [HttpGet]
         [Route("api/tests")]
-        public IActionResult GetAll([FromServices] ILoggerFactory loggerFactory)
+        public IActionResult GetAll([FromServices] ILogger logger)
         {
             DefaultAssemblyRegistry.Current.ThrowIfNull();
 
-            Debug.WriteLine(TypeHelper.GetTypeName(loggerFactory.GetType()));
+            logger.Here().Debug("Getting the welcome messages from all services...");
 
             return
                 Ok(
