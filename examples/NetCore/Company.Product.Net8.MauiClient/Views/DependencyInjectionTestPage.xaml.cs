@@ -15,6 +15,10 @@ using EgonsoftHU.Extensions.DependencyInjection;
 using EgonsoftHU.Extensions.Logging;
 
 using Microsoft.Maui.Controls;
+#if WINDOWS
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.Web.WebView2.Core;
+#endif
 
 using ILogger = Serilog.ILogger;
 
@@ -49,6 +53,34 @@ namespace Company.Product.Net8.MauiClient.Views
             this.logger = logger;
 
             InitializeComponent();
+
+#if WINDOWS
+            AppInfo.HandlerChanged +=
+                (sender, e) =>
+                {
+                    if (sender is not WebView webView)
+                    {
+                        return;
+                    }
+
+                    if (webView.Handler?.PlatformView is not WebView2 webView2)
+                    {
+                        return;
+                    }
+
+                    webView2.CoreWebView2Initialized +=
+                        (sender, e) =>
+                        {
+                            CoreWebView2Settings settings = webView2.CoreWebView2.Settings;
+
+                            settings.AreDefaultScriptDialogsEnabled = false;
+                            settings.AreDevToolsEnabled = false;
+                            settings.AreHostObjectsAllowed = false;
+                            settings.IsScriptEnabled = false;
+                            settings.IsWebMessageEnabled = false;
+                        };
+                };
+#endif
         }
 
         protected override async void OnNavigatedTo(NavigatedToEventArgs args)
