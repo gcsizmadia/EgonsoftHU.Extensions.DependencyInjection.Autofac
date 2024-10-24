@@ -57,9 +57,8 @@
     <Reference Include="EgonsoftHU.Extensions.DependencyInjection.Abstractions, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EgonsoftHU.Extensions.DependencyInjection.Abstractions.3.0.0\lib\net462\EgonsoftHU.Extensions.DependencyInjection.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="EgonsoftHU.Extensions.DependencyInjection.Autofac, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\EgonsoftHU.Extensions.DependencyInjection.Autofac.4.0.0-prerelease-297-1040\lib\net472\EgonsoftHU.Extensions.DependencyInjection.Autofac.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="EgonsoftHU.Extensions.DependencyInjection.Autofac, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EgonsoftHU.Extensions.DependencyInjection.Autofac.4.0.0\lib\net472\EgonsoftHU.Extensions.DependencyInjection.Autofac.dll</HintPath>
     </Reference>
     <Reference Include="EgonsoftHU.Extensions.Logging.Serilog, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EgonsoftHU.Extensions.Logging.Serilog.2.0.0\lib\net461\EgonsoftHU.Extensions.Logging.Serilog.dll</HintPath>
