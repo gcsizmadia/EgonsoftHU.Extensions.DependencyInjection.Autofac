@@ -14,8 +14,16 @@
     <Owners></Owners>
     -->
     <Title>Egonsoft.HU DependencyInjection Extensions for Autofac</Title>
-    <Description>A dependency module (derived from Autofac.Module) that discovers and registers all other dependency modules (derived from Autofac.Module). The dependency modules can also have shared dependencies injected into them, e.g. IConfiguration, IHostEnvironment and even IServiceCollection, see Module Dependencies - injection into modules section in README.md for details.</Description>
-    <Summary>A dependency module (derived from Autofac.Module) that discovers and registers all other dependency modules (derived from Autofac.Module). The dependency modules can also have shared dependencies injected into them, e.g. IConfiguration, IHostEnvironment and even IServiceCollection, see Module Dependencies - injection into modules section in README.md for details.</Summary>
+    <Description>A dependency module (derived from Autofac.Module) that discovers and registers all other dependency modules (derived from Autofac.Module). The dependency modules can also have shared dependencies injected into them, e.g. IConfiguration, IHostEnvironment and even IServiceCollection.
+
+Commonly Used Types:
+EgonsoftHU.Extensions.DependencyInjection.AutofacServiceProviderFactoryDecorator
+EgonsoftHU.Extensions.DependencyInjection.DependencyModule</Description>
+    <Summary>A dependency module (derived from Autofac.Module) that discovers and registers all other dependency modules (derived from Autofac.Module). The dependency modules can also have shared dependencies injected into them, e.g. IConfiguration, IHostEnvironment and even IServiceCollection.
+
+Commonly Used Types:
+EgonsoftHU.Extensions.DependencyInjection.AutofacServiceProviderFactoryDecorator
+EgonsoftHU.Extensions.DependencyInjection.DependencyModule</Summary>
     <!--
     <Copyright></Copyright>
     <PackageRequireLicenseAcceptance></PackageRequireLicenseAcceptance>
@@ -27,7 +35,7 @@
     <PackageIconUrl></PackageIconUrl>
     <PackageReadmeFile></PackageReadmeFile>
     -->
-    <PackageTags>$(PackageTags) extensions extension dependencyinjection di ioc autofac module maui</PackageTags>
+    <PackageTags>$(PackageTags) extensions extension dependencyinjection dependency injection di ioc autofac module maui</PackageTags>
     <PackageReleaseNotes>Please visit https://github.com/gcsizmadia/EgonsoftHU.Extensions.DependencyInjection.Autofac/releases to view the release notes.</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RepositoryUrl>https://github.com/gcsizmadia/EgonsoftHU.Extensions.DependencyInjection.Autofac.git</RepositoryUrl>
