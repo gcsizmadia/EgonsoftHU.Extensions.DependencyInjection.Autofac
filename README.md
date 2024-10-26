@@ -1,35 +1,42 @@
-# Egonsoft.HU DependencyInjection Extensions for Autofac
+﻿# Egonsoft.HU DependencyInjection Extensions for Autofac
 
 [![GitHub](https://img.shields.io/github/license/gcsizmadia/EgonsoftHU.Extensions.DependencyInjection.Autofac?label=License)](https://opensource.org/licenses/MIT)
 [![Nuget](https://img.shields.io/nuget/v/EgonsoftHU.Extensions.DependencyInjection.Autofac?label=NuGet)](https://www.nuget.org/packages/EgonsoftHU.Extensions.DependencyInjection.Autofac)
 [![Nuget](https://img.shields.io/nuget/dt/EgonsoftHU.Extensions.DependencyInjection.Autofac?label=Downloads)](https://www.nuget.org/packages/EgonsoftHU.Extensions.DependencyInjection.Autofac)
 
-A dependency module (derived from Autofac.Module) that discovers and registers all other dependency modules (derived from Autofac.Module).
+A dependency module (derived from `Autofac.Module`) that discovers and registers all other dependency modules (derived from `Autofac.Module`).
 
-The dependency modules can also have shared dependencies injected into them, e.g. `IConfiguration`, `IHostEnvironment` and even `IServiceCollection`, see [Module Dependencies - injection into modules](#module-dependencies---injection-into-modules) for details.
-
-**Please note:** `EgonsoftHU.Extensions.DependencyInjection.Abstractions` project moved to [its own repository](https://github.com/gcsizmadia/EgonsoftHU.Extensions.DependencyInjection.Abstractions).
+The dependency modules can also have shared dependencies injected into them, e.g. `IConfiguration`, `IHostEnvironment` and even `IServiceCollection`.
 
 ## Table of Contents
 
-- [Introduction](#introduction)
-- [Releases](#releases)
-- [Autofac version](#autofac-version)
-- [Summary](#summary)
-- [Instructions](#instructions)
-  - [Instructions for .NET Core 3.1 / .NET 5 / .NET 6](#instructions-for-net-core-31--net-5--net-6)
-  - [Instructions for .NET Framework 4.6.1+](#instructions-for-net-framework-461)
-  - [Usage option #1 - Use the default assembly registry](#usage-option-1---use-the-default-assembly-registry)
-  - [Usage option #2 - Use your custom assembly registry (interface + parameterless ctor)](#usage-option-2---use-your-custom-assembly-registry-interface--parameterless-ctor)
-  - [Usage option #3 - Use your custom assembly registry (interface only)](#usage-option-3---use-your-custom-assembly-registry-interface-only)
-  - [Usage option #4 - Use your custom assembly registry (it will be used through reflection)](#usage-option-4---use-your-custom-assembly-registry-it-will-be-used-through-reflection)
-- [Module Dependencies - injection into modules](#module-dependencies---injection-into-modules)
-- [Examples](#examples)
-  - [Example output](#example-output)
+* [Introduction](#introduction)
+* [Releases](#releases)
+* [Autofac version](#autofac-version)
+* [Summary](#summary)
+* [Assembly registry](#assembly-registry)
+  + [Option #1 - Use the default assembly registry](#option--1---use-the-default-assembly-registry)
+  + [Option #2 - Use the pre-initialized default assembly registry](#option--2---use-the-pre-initialized-default-assembly-registry)
+  + [Option #3 - Use your custom assembly registry (interface + parameterless ctor)](#option--3---use-your-custom-assembly-registry--interface---parameterless-ctor-)
+  + [Option #4 - Use your custom assembly registry (interface only)](#option--4---use-your-custom-assembly-registry--interface-only-)
+  + [Option #5 - Use your custom assembly registry (it will be used through reflection)](#option--5---use-your-custom-assembly-registry--it-will-be-used-through-reflection-)
+* [`AutofacServiceProviderFactoryDecorator`](#-autofacserviceproviderfactorydecorator-)
+* [`ContainerBuilder` extension methods](#-containerbuilder--extension-methods)
+  + [Configuring an assembly registry](#configuring-an-assembly-registry)
+  + [DI for the dependency modules](#di-for-the-dependency-modules)
+* [Examples](#examples)
+  + [Example for MAUI](#example-for-maui)
+  + [Example for .NET 6+](#example-for-net-6-)
+  + [Example for .NET Framework 4.7.2+](#example-for-net-framework-472-)
+  + [Example without `AutofacServiceProviderFactoryDecorator`](#example-without--autofacserviceproviderfactorydecorator-)
+  + [Additional examples](#additional-examples)
 
 ## Introduction
 
-The motivation behind this project is to automatically discover and register all dependency modules in projects that are referenced by the startup project and also being able to use `IConfiguration`, `IHostEnvironment` and even `IServiceCollection` instances as well.
+The motivations behind this project are:
+- to automatically discover and register all dependency modules in projects that are referenced by the startup project
+- to be able to access `IConfiguration`, `IHostEnvironment` instances from within the dependency modules
+- to be able to use `IServiceCollection` extension methods in them.
 
 ## Releases
 
@@ -40,23 +47,50 @@ You can find the release notes [here](https://github.com/gcsizmadia/EgonsoftHU.E
 
 ## Autofac version
 
-|EgonsoftHU.Extensions.DependencyInjection.Autofac|1.0.0 - 2.0.0|3.0.0|
-|:-|:-:|:-:|
-|Autofac.Extensions.DependencyInjection<br/>*dependency type:*|-|8.0.0<br/>*direct / top-level*|
-|Autofac<br/>*dependency type:*|4.9.4<br/>*direct / top-level*|6.4.0<br/>*indirect / transitive*|
-|Targeted .NET Framework|4.6.1+|4.7.2+|
+|EgonsoftHU.Extensions.DependencyInjection.Autofac|1.0.0 - 2.0.0|3.0.0|4.0.0|
+|:-|:-:|:-:|:-:|
+|Autofac.Extensions.DependencyInjection<br/>*dependency type:*|-|8.0.0<br/>*direct / top-level*|10.0.0<br/>*direct / top-level*|
+|Autofac<br/>*dependency type:*|4.9.4<br/>*direct / top-level*|6.4.0<br/>*indirect / transitive*|8.1.0<br/>*indirect / transitive*|
+|Target frameworks|`netstandard2.0`<br/>`netstandard2.1`<br/>`net461`<br/>`netcoreapp3.1`<br/>`net6.0`|`netstandard2.0`<br/>`netstandard2.1`<br/>`net472`<br/>`netcoreapp3.1`<br/>`net6.0`|`netstandard2.0`<br/>`netstandard2.1`<br/>`net472`<br/>`net6.0`<br/>`net8.0`|
 
 **Note:** .NET Framework target version changed because `Autofac.WebApi2` that can be used with `Autofac` 6+ is targeted only to .NET Framework 4.7.2.
 
 ## Summary
 
-To use this solution you need to do 2 things.
+This solution uses an assembly registry,  a decorator class for `AutofacServiceProviderFactory` and an `Autofac` module.
 
-***First***, configure an assembly registry. There is a default implementation you can use.
+The assembly registry contains all the relevant assemblies that may have a dependency module.
+
+The decorator class (`EgonsoftHU.Extensions.DependencyInjection.AutofacServiceProviderFactoryDecorator`)
+- captures the existing `IServiceCollection` instance  
+  when the `IServiceProviderFactory<ContainerBuilder>.CreateBuilder(IServiceCollection)` method is called and
+- shares a copy of it to the `Autofac` module below.
+
+The `Autofac` module (`EgonsoftHU.Extensions.DependencyInjection.DependencyModule`)
+1. checks all the assemblies in the assembly registry for types derived from `Autofac.Module` type
+1. into a temporary `ContainerBuilder` instance
+   - registers them, hence you will be able to inject dependencies into your dependency modules, e.g. `IConfiguration`
+   - registers other dependencies you specified, e.g. `IConfiguration`
+   - registers a copy of the shared `IServiceCollection` instance  
+     (except if you already specified one, but then you need to handle possible service registration overrides)
+1. builds the temporary `IContainer` instance
+1. resolves the dependency modules from it
+1. registers them into the actual `ContainerBuilder` instance
+1. finally, the service registrations that are newly added to the shared `IServiceCollection` instance
+   are populated into the actual `ContainerBuilder` instance.
+
+**Note:** Step 2 - 4 will happen only if you use `ContainerBuilder.TreatModulesAsServices()` extension method directly
+or indirectly by using `AutofacServiceProviderFactoryDecorator.CreateDefault()` method overloads.
+
+## Assembly registry
+
+There is a default implementation you can use.
 
 The default implementation:
-- requires your assembly file name prefixes, e.g. `YourPrefix`
-- will search for assembly files with the following pattern: `YourPrefix.*.dll`
+- requires your assembly file name prefixes (can be more than one), e.g. `YourPrefix`, `YourOtherPrefix`
+- will search for assembly files with the following pattern: `YourPrefix.*.dll`, `YourOtherPrefix.*.dll`
+
+**Note:** `EgonsoftHU` prefix is always added, hence all referenced `EgonsoftHU.*.dll` files will also be loaded.
 
 You can provide your own implementation. The required steps to implement:
 - **Initialization (ensure all relevant assemblies are loaded into the `AppDomain`)**  
@@ -70,267 +104,138 @@ You can provide your own implementation. The required steps to implement:
      The method name must be `GetAssemblies`.
      The return type can be any type that can be assigned to a variable of the `IEnumerable<Assembly>` type.
 
-***Finally***, register the module that will discover and register all other modules.
+To configure the assembly registry, use one of the `ContainerBuilder` extension methods below.
 
-## Instructions
+### Option #1 - Use the default assembly registry
 
-The usage options are the same for both .NET Framework and .NET Core 3.1 / .NET 5 / .NET 6.
-The difference is where the magic happens.
-
-### Instructions for .NET Core 3.1 / .NET 5 / .NET 6
-
-***First***, install the *EgonsoftHU.Extensions.DependencyInjection.Autofac* [NuGet package](https://www.nuget.org/packages/EgonsoftHU.Extensions.DependencyInjection.Autofac).
-```
-dotnet add package EgonsoftHU.Extensions.DependencyInjection.Autofac
-```
-
-***Next***, add `ConfigureContainer<ContainerBuilder>()` to the Generic Host in `CreateHostBuilder()`.
-```C#
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
-
-using EgonsoftHU.Extensions.DependencyInjection;
-
-namespace YourCompany.YourProduct.WebApi
-{
-    public class Program
-    {
-        // rest omitted for clarity
-
-        static IHostBuilder CreateHostBuilder(string[] args)
-        {
-            return
-                Host.CreateDefaultBuilder(args)
-                    .ConfigureWebHostDefaults(
-                        webHostBuilder =>
-                        {
-                            webHostBuilder.UseStartup<Startup>();
-                        }
-                    )
-                    .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                    .ConfigureContainer<ContainerBuilder>( // <-- Add this method call
-                        builder =>
-                        {
-                            // here comes the magic
-                        }
-                    );
-        }
-    }
-}
-```
-
-***Alternatively***, you can add `ConfigureContainer(ContainerBuilder builder)` to your `Startup.cs` file.
-
-```C#
-using Autofac;
-
-using EgonsoftHU.Extensions.DependencyInjection;
-
-namespace YourCompany.YourProduct.WebApi
-{
-    public class Startup
-    {
-        // rest omitted for clarity.
-
-        public void ConfigureContainer(ContainerBuilder builder) // <-- Add this method
-        {
-            // here comes the magic
-        }
-    }
-}
-```
-
-***Finally***, replace the `// here comes the magic` comment with one of the usage options.
-
-### Instructions for .NET Framework 4.6.1+
-
-***First***, in the Package Manager Console install the *EgonsoftHU.Extensions.DependencyInjection.Autofac* [NuGet package](https://www.nuget.org/packages/EgonsoftHU.Extensions.DependencyInjection.Autofac).
-```pwsh
-Install-Package EgonsoftHU.Extensions.DependencyInjection.Autofac
-```
-
-***Then***, locate where you create Autofac's `ContainerBuilder`.
-
-***Then***, choose one of the usage options below.
-
-***Finally***, add the required code right after the creation of `ContainerBuilder`.
-
-**Note:** You can find an example in the `Company.Product.NetFx.WebApi` project.
-Check out the [`WebApiConfig.Extensions.Autofac.cs`](examples/Company.Product.NetFx.WebApi/App_Start/WebApiConfig.Extensions.Autofac.cs) file.
-It contains configuring Autofac as the ASP.NET dependency resolver and also the [usage option #1](#usage-option--1---use-the-default-assembly-registry).
-
-### Usage option #1 - Use the default assembly registry
-
-```C#
+```csharp
 /*
- * Step #1: Configure assembly registry
- *
  * Use the default assembly registry.
  * Provide your assembly file name prefixes.
  */
 
-// if the DefaultAssemblyRegistry is not initialized yet
-builder.UseDefaultAssemblyRegistry(nameof(YourCompany));
-
-// if you already initialized the DefaultAssemblyRegistry by calling its Initialize() method
-builder.UseAssemblyRegistry(DefaultAssemblyRegistry.Current);
-
-// Step #2: Register the module that will discover and register all other modules.
-builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.DependencyModule>();
+builder.UseDefaultAssemblyRegistry(nameof(YourPrefix));
 ```
 
-### Usage option #2 - Use your custom assembly registry (interface + parameterless ctor)
+### Option #2 - Use the pre-initialized default assembly registry
 
-```C#
+```csharp
 /*
- * Step #1: Configure assembly registry
- *
+ * Use the default assembly registry.
+ * Provide your assembly file name prefixes.
+ */
+
+DefaultAssemblyRegistry.Initialize(nameof(YourPrefix));
+
+builder.UseAssemblyRegistry(DefaultAssemblyRegistry.Current);
+```
+
+### Option #3 - Use your custom assembly registry (interface + parameterless ctor)
+
+```csharp
+/*
  * The custom assembly registry must:
  * - implement this interface: EgonsoftHU.Extensions.DependencyInjection.IAssemblyRegistry
  * - have a parameterless ctor that initializes the instance
  */
 builder.UseAssemblyRegistry<YourCustomAssemblyRegistry>();
-
-// Step #2: Register the module that will discover and register all other modules.
-builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.DependencyModule>();
 ```
 
-### Usage option #3 - Use your custom assembly registry (interface only)
+### Option #4 - Use your custom assembly registry (interface only)
 
-```C#
+```csharp
 /*
- * Step #1: Configure assembly registry
- *
  * The custom assembly registry must:
  * - implement this interface: EgonsoftHU.Extensions.DependencyInjection.IAssemblyRegistry
  */
 IAssemblyRegistry assemblyRegistry = /* get an initialized instance of YourCustomAssemblyRegistry */
 builder.UseAssemblyRegistry(assemblyRegistry);
-
-// Step #2: Register the module that will discover and register all other modules.
-builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.DependencyModule>();
 ```
 
-### Usage option #4 - Use your custom assembly registry (it will be used through reflection)
+### Option #5 - Use your custom assembly registry (it will be used through reflection)
 
-```C#
+```csharp
 /*
- * Step #1: Configure assembly registry
- *
  * The custom assembly registry must provide a public parameterless instance method:
  * - Name: GetAssemblies
  * - Return type: assignable to IEnumerable<Assembly>
  */
 object assemblyRegistry = /* get an initialized instance of YourCustomAssemblyRegistry */
 builder.UseAssemblyRegistry(assemblyRegistry);
-
-// Step #2: Register the module that will discover and register all other modules.
-builder.RegisterModule<EgonsoftHU.Extensions.DependencyInjection.DependencyModule>();
 ```
 
-## Module Dependencies - injection into modules
+## `AutofacServiceProviderFactoryDecorator`
 
-If you need to access some external information (e.g. `IConfiguration`) inside a module for registering a service then you can inject it.
+This decorator class has static factory methods (`.CreateDefault()` overloads) so that the default usage will be very simple.
 
-Additionally, if you would like to use `IServiceCollection` extension methods inside your module then you can also inject an instance of it.
+You can specify one or more assembly file name prefixes and zero or more dependencies (up to 4) to inject into the dependency modules.
 
-**Note:**
-- Always create a new `IServiceCollection` instance for injection.
-- Do NOT inject the already existing instance from your `IHostBuilder`/`WebApplicationBuilder`/etc.
-
-Let's see the following example:
+**Example configuration with 1 prefix and 2 dependencies:**
 
 ```csharp
 using EgonsoftHU.Extensions.DependencyInjection;
 
-builder
-    .Host
-    .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-    .ConfigureContainer<ContainerBuilder>(
-        (hostBuilderContext, containerBuilder) =>
-        {
-            // This will be a shared instance for all modules.
-            //
-            // Always register a new instance because by the time the modules are executed
-            // the service registration in builder.Services are already populated into the containerBuilder.
-            IServiceCollection services = new ServiceCollection();
+// Call the IHostBuilder.UseServiceProviderFactory() method.
 
-            containerBuilder
-                .UseDefaultAssemblyRegistry(nameof(Company))
-                .TreatModulesAsServices()
-                .RegisterModuleDependencyInstance(services)
-                .RegisterModuleDependencyInstance(hostBuilderContext.Configuration)
-                .RegisterModuleDependencyInstance(hostBuilderContext.HostingEnvironment)
-                .RegisterModule<EgonsoftHU.Extensions.DependencyInjection.DependencyModule>();
-        }
-    );
+builder.Host.UseServiceProviderFactory(
+    hostBuilderContext => AutofacServiceProviderFactoryDecorator.CreateDefault(
+        nameof(YourPrefix),
+        hostBuilderContext.Configuration,
+        hostBuilderContext.HostingEnvironment
+    )
+);
 ```
+
+The functionally equivalent version:
+
+```csharp
+using EgonsoftHU.Extensions.DependencyInjection;
+
+// Call the IHostBuilder.UseServiceProviderFactory() method.
+
+builder.Host.UseServiceProviderFactory(
+    hostBuilderContext =>
+        new AutofacServiceProviderFactoryDecorator(
+            containerBuilder =>
+                containerBuilder
+                    .UseDefaultAssemblyRegistry(nameof(YourPrefix))
+                    .TreatModulesAsServices()
+                    .RegisterModuleDependencyInstance(hostBuilderContext.Configuration)
+                    .RegisterModuleDependencyInstance(hostBuilderContext.HostingEnvironment)
+                    .RegisterModule<DependencyModule>()
+        )
+);
+```
+
+## `ContainerBuilder` extension methods
+
+The following extension methods are available.
+
+### Configuring an assembly registry
+
+- `UseDefaultAssemblyRegistry(params string[] assemblyFileNamePrefixes)`  
+- `UseRegistryAssembly<TAssemblyRegistry>() where TAssemblyRegistry : IAssemblyRegistry, new()`
+- `UseRegistryAssembly(IAssemblyRegistry assemblyRegistry)`
+- `UseRegistryAssembly(object assemblyRegistry)`
+
+### DI for the dependency modules
+
+- `ConfigureModuleOptions(Action<ModuleOptions> setupAction)`  
+  The following options can be configured:  
+  - `TreatModulesAsServices` (i.e. the dependency modules have dependencies, e.g. `IConfiguration`)  
+    -> `false` (default) / `true`
+  - `DependencyInjectionOption` (how to inject dependencies into the dependency modules)  
+    -> `NoInjection` (default), `PropertyInjection`, `ConstructorInjection`
+  - `OnModulesRegistered` (a delegate to execute after all the dependency modules are registered)  
+    -> `Action<ContainerBuilder>`
 
 - `TreatModulesAsServices()`  
-  - The dependency modules (derived from `Autofac.Module`) themselves as `Autofac.IModule` service type will be registered into a separate, temporary Autofac `ContainerBuilder` instance.
-  - Each dependency module will be resolved from this container with their dependencies.
-  - The resolved dependency module instance will then be registered using the main Autofac `ContainerBuilder` instance.
-- `RegisterModuleDependencyInstance<T>(T instance)`
-  - Registers an object instance as `T` service type into that seperate, temporary Autofac `ContainerBuilder` instance.
+  Configures `ModuleOptions`.
+  - `TreatModulesAsServices` will be set to `true`
+  - `DependencyInjectionOption` will be set to `ModuleDependencyInjectionOption.PropertyInjection`
 
-By default, the dependency module will get its dependencies through *property injection*.  
-So your module has to have a public writable property with `T` type.
-
-```csharp
-using Autofac;
-
-using EgonsoftHU.Extensions.Bcl;
-
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
-public class DependencyModule : Module
-{
-    public IConfiguration? Configuration { get; set; }
-
-    public IServiceCollection? Services { get; set; }
-
-    protected override void Load(ContainerBuilder builder)
-    {
-        // EgonsoftHU.Extensions.Bcl nuget package
-        Configuration.ThrowIfNull();
-        Services.ThrowIfNull();
-
-        Services
-            .AddOptions<MyCustomOptions>()
-            // Microsoft.Extensions.Options.ConfigurationExtensions nuget package
-            .Bind(Configuration.GetSection("MyCustomOptions"))
-            // Microsoft.Extensions.Options.DataAnnotations nuget package
-            .ValidateDataAnnotations()
-            // Microsoft.Extensions.Hosting nuget package
-            .ValidateOnStart();
-
-        // Now you can register a service type that requires IOptions<MyCustomOptions>
-        builder.RegisterType<CustomService>().As<ICustomService>().InstancePerLifetimeScope();
-    }
-}
-```
-
-You can also use *constructor injection*.
-
-In this case instead of `TreatModulesAsServices()` extension method use `ConfigureModuleOptions()` extension method as below:
-
-```csharp
-containerBuilder
-    .UseDefaultAssemblyRegistry(nameof(Company))
-    .ConfigureModuleOptions(
-        options =>
-        {
-            options.TreatModulesAsServices = true;
-            options.DependencyInjectionOption = ModuleDependencyInjectionOption.ConstructorInjection;
-        }
-    )
-    .RegisterModuleDependencyInstance(services)
-    .RegisterModuleDependencyInstance(hostBuilderContext.Configuration)
-    .RegisterModuleDependencyInstance(hostBuilderContext.HostingEnvironment)
-    .RegisterModule<EgonsoftHU.Extensions.DependencyInjection.DependencyModule>();
-```
+- `RegisterModuleDependencyInstance<T>(T instance)`  
+  Registers a module dependency into a temporary `ContainerBuilder` from which it will be resolved for the dependency modules.
 
 **Please note:**
 
@@ -340,93 +245,257 @@ containerBuilder
 
 ## Examples
 
-Check out [`Examples.sln`](Examples.sln) that references the following projects from the [`examples`](https://github.com/gcsizmadia/EgonsoftHU.Extensions.DependencyInjection.Autofac/tree/main/examples) folder:
+### Example for MAUI
 
-|Type|Project&nbsp;Name&nbsp;/&nbsp;Target&nbsp;Framework|Description|
-|:-:|-|-|
-|![C# Class Library](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library")![C# Class Library](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library")|`Company.Product.ComponentA.NetFx`<br/>.NET&nbsp;Framework&nbsp;4.7.2|Contains `ServiceA` and a `DependencyModule` that registers it.<br/><br/>`ConfigurationManager.AppSettings` is injected into `DependencyModule`.|
-|![C# Class Library](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library")![C# Class Library](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library")|`Company.Product.ComponentA.NetCore`<br/>.NET&nbsp;Core&nbsp;3.1|Contains `ServiceA` and a `DependencyModule` that registers it.<br/><br/>`IConfiguration` and `IHostEnvironment` are injected into `DependencyModule`.|
-|![C# Class Library](images/light/CSClassLibrary.png#gh-light-mode-only "C# Class Library")![C# Class Library](images/dark/CSClassLibrary.png#gh-dark-mode-only "C# Class Library")|`Company.Product.ComponentB`<br/>.NET&nbsp;Standard&nbsp;2.0|Contains `ServiceB` and a `DependencyModule` that registers it.|
-|![C# Web Application](images/light/CSWebApplication.png#gh-light-mode-only "C# Web Application")![C# Web Application](images/dark/CSWebApplication.png#gh-dark-mode-only "C# Web Application")|`Company.Product.NetFx.WebApi`<br/>.NET&nbsp;Framework&nbsp;4.7.2|Uses `ServiceA` and `ServiceB` and also contains and uses `ServiceC` and a `DependencyModule` that registers it.<br/><br/>`DefaultAssemblyRegistry` is configured to use `Serilog`.|
-|![C# Web Application](images/light/CSWebApplication.png#gh-light-mode-only "C# Web Application")![C# Web Application](images/dark/CSWebApplication.png#gh-dark-mode-only "C# Web Application")|`Company.Product.NetCore.WebApi`<br/>.NET&nbsp;Core&nbsp;3.1|Uses `ServiceA` and `ServiceB` and also contains and uses `ServiceC` and a `DependencyModule` that registers it.<br/><br/>`DefaultAssemblyRegistry` is configured to use `Microsoft.Extensions.Logging`.|
-|![C# Web Application](images/light/CSWebApplication.png#gh-light-mode-only "C# Web Application")![C# Web Application](images/dark/CSWebApplication.png#gh-dark-mode-only "C# Web Application")|`Company.Product.Net6.WebApi`<br/>.NET&nbsp;6.0|Uses `ServiceA` and `ServiceB` and also contains and uses `ServiceC` and a `DependencyModule` that registers it.<br/><br/>`DefaultAssemblyRegistry` is configured to use `Serilog`.|
-|![C# MAUI Application](images/light/Maui.png#gh-light-mode-only "C# MAUI Application")![C# MAUI Application](images/dark/Maui.png#gh-dark-mode-only "C# MAUI Application")|`Company.Product.Net7.MauiClient`<br/>.NET&nbsp;7.0|Uses `ServiceA` and `ServiceB` and also contains and uses `ServiceC` and a `DependencyModule` that registers it.<br/><br/>`DefaultAssemblyRegistry` is not configured to use any logging framework.|
+This is an example for a .NET 8 MAUI project.
 
-### Example output
+**MauiProgram.cs**
 
-Navigating to the `~/api/tests` API endpoint should display this result:
-
-*.NET Framework 4.7.2*
-
-```json
+```csharp
+public static class MauiProgram
 {
-  "ServiceA": [
-    "Hello from Company.Product.ComponentA.NetFx.ServiceA",
+    public static MauiApp CreateMauiApp()
     {
-      "EnvironmentName": "Development",
-      "WelcomeMessage": "Welcome from the Web.config file."
+        MauiAppBuilder builder = MauiApp.CreateBuilder();
+
+        builder.ConfigureContainer(
+            AutofacServiceProviderFactoryDecorator.CreateDefault(
+                nameof(YourPrefix),
+                // Here a cast is needed since the type of the Configuration property is
+                // Microsoft.Extensions.Configuration.ConfigurationManager
+                (IConfiguration)builder.Configuration
+            )
+        );
+
+        // Alternatively, you can specify the type parameter.
+        builder.ConfigureContainer(
+            AutofacServiceProviderFactoryDecorator.CreateDefault<IConfiguration>(
+                nameof(YourPrefix),
+                builder.Configuration
+            )
+        );
+
+        // rest is omitted for clarity
     }
-  ],
-  "ServiceB": "Hello from Company.Product.ComponentB.ServiceB",
-  "ServiceC": "Hello from Company.Product.NetFx.WebApi.Services.ServiceC",
-  "Assemblies": [
-    "Company.Product.ComponentA.NetFx, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-    "Company.Product.ComponentB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-    "Company.Product.NetFx.WebApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-  ]
 }
 ```
 
-*.NET Core 3.1*
+### Example for .NET 6+
 
-```json
+This is an example for an ASP.NET Core Web API project.
+
+**Program.cs**
+
+```csharp
+using EgonsoftHU.Extensions.DependencyInjection;
+
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseServiceProviderFactory(
+    hostBuilderContext => AutofacServiceProviderFactoryDecorator.CreateDefault(
+        nameof(YourPrefix),
+        hostBuilderContext.Configuration,
+        hostBuilderContext.HostingEnvironment
+    )
+);
+
+// rest is omitted for clarity
+```
+
+**CustomService.cs** (in an assembly the file name of which matches the `YourPrefix.*.dll` pattern)
+
+```csharp
+public class CustomService : ICustomService
 {
-  "serviceA": [
-    "Hello from Company.Product.ComponentA.NetCore.ServiceA",
+    public CustomService(IOptions<MyCustomOptions> options, string environmentName)
     {
-      "environmentName": "Development",
-      "serviceAOptions": {
-        "welcomeMessage": "Welcome from the appsettings.Development.json file."
-      }
     }
-  ],
-  "serviceB": "Hello from Company.Product.ComponentB.ServiceB",
-  "serviceC": "Hello from Company.Product.NetCore.WebApi.Services.ServiceC",
-  "assemblies": [
-    "Company.Product.ComponentA.NetCore, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-    "Company.Product.ComponentB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-    "Company.Product.NetCore.WebApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-  ]
 }
 ```
 
-*.NET 6.0*
+**DependencyModule.cs** (in the same assembly in which `CustomService` is defined)
 
-```json
+```csharp
+using Autofac;
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
+public sealed class DependencyModule : Module
 {
-  "serviceA": [
-    "Hello from Company.Product.ComponentA.NetCore.ServiceA",
+    public required IConfiguration Configuration { get; set; }
+    public required IHostEnvironment HostEnvironment { get; set; }
+    public required IServiceCollection Services { get; set; }
+
+    protected override void Load(ContainerBuilder builder)
     {
-      "environmentName": "Development",
-      "serviceAOptions": {
-        "welcomeMessage": "Welcome from the appsettings.Development.json file."
-      }
+        Services
+            .AddOptions<MyCustomOptions>()
+            .Bind(Configuration.GetSection("MyCustomOptions"))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        builder
+            .RegisterType<CustomService>()
+            .As<ICustomService>()
+            .InstancePerLifetimeScope()
+            .WithParameter(new NamedParameter("environmentName", HostEnvironment.EnvironmentName));
     }
-  ],
-  "serviceB": "Hello from Company.Product.ComponentB.ServiceB",
-  "serviceC": "Hello from Company.Product.Net6.WebApi.Services.ServiceC",
-  "assemblies": [
-    "Company.Product.ComponentA.NetCore, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-    "Company.Product.ComponentB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-    "Company.Product.Net6.WebApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-  ]
 }
 ```
 
-*.NET 7.0 + MAUI (Windows)*
+### Example for .NET Framework 4.7.2+
 
-![C# MAUI Application on Windows](images/maui_win_example.png)
+This is an example for an ASP.NET Web API 2 project.
 
-*.NET 7.0 + MAUI (Android)*
+**WebApiConfig.cs**
 
-![C# MAUI Application on Android](images/maui_android_example.png)
+```csharp
+using System.Web.Http;
+
+namespace YourCompany.YourProduct.WebApi
+{
+    public static partial class WebApiConfig
+    {
+        public static void Register(HttpConfiguration httpConfiguration)
+        {
+            httpConfiguration.ConfigureAutofac();
+            // rest is omitted for clarity
+        }
+    }
+}
+```
+
+**WebApiConfig.Extensions.Autofac.cs**
+
+```csharp
+using System.Configuration;
+using System.Reflection;
+using System.Web.Http;
+
+using Autofac;
+using Autofac.Integration.WebApi;
+
+using EgonsoftHU.Extensions.DependencyInjection;
+
+namespace YourCompany.YourProduct.WebApi
+{
+    public static partial class WebApiConfig
+    {
+        public static void ConfigureAutofac(HttpConfiguration httpConfiguration)
+        {
+            var builder = new ContainerBuilder();
+
+            builder
+                .UseDefaultAssemblyRegistry(nameof(YourCompany))
+                .TreatModulesAsServices()
+                .RegisterModuleDependencyInstance(ConfigurationManager.AppSettings)
+                .RegisterModule<DependencyModule>();
+
+            builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
+            builder.RegisterWebApiFilterProvider(httpConfiguration);
+
+            IContainer container = builder.Build();
+
+            GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+        }
+    }
+}
+```
+
+**CustomService.cs** (in an assembly the file name of which matches the `YourPrefix.*.dll` pattern)
+
+```csharp
+namespace YourCompany.YourProduct.WebApi
+{
+    public class CustomService : ICustomService
+    {
+        public CustomService(string environmentName)
+        {
+        }
+    }
+}
+```
+
+**DependencyModule.cs** (in the same assembly in which `CustomService` is defined)
+
+```csharp
+using System.Collections.Specialized;
+
+using Autofac;
+
+namespace YourCompany.YourProduct.WebApi
+{
+    public class DependencyModule : Module
+    {
+        public NameValueCollection AppSettings { get; set; }
+
+        protected override void Load(ContainerBuilder builder)
+        {
+            builder
+                .RegisterType<CustomService>()
+                .As<ICustomService>()
+                .InstancePerLifetimeScope()
+                .WithParameter(new NamedParameter("environmentName", AppSettings?["EnvironmentName"] ?? "N/A"));
+        }
+    }
+}
+```
+
+### Example without `AutofacServiceProviderFactoryDecorator`
+
+The `AutofacServiceProviderFactoryDecorator` is introduced in the `4.0.0` version of this package.
+
+The example below is for the earlier package versions.  
+Without the decorator you need to handle service registration override issues.
+
+**Program.cs**
+
+```csharp
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+builder
+    .Host
+    // UseSerilog()
+    // registers Serilog.Extensions.Logging.SerilogLoggerFactory
+    // as Microsoft.Extensions.Logging.ILoggerFactory
+    .UseSerilog()
+    .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+    .ConfigureContainer<ContainerBuilder>(
+        (hostBuilderContext, containerBuilder) =>
+        {
+            // This instance will be injected into all the dependency modules.
+            // 
+            // Since it does not contain the registration of SerilogLoggerFactory,
+            // if IServiceCollection.AddLogging() extension method is called directly or indirectly
+            // in the dependency modules then it will
+            // register Microsoft.Extensions.Logging.LoggerFactory
+            // as Microsoft.Extensions.Logging.ILoggerFactory.
+            IServiceCollection services = new ServiceCollection();
+
+            containerBuilder
+                .UseDefaultAssemblyRegistry(nameof(Company))
+                .TreatModulesAsServices()
+                // To avoid overriding ILoggerFactory registration made by UseSerilog() extension method
+                // we remove all ILoggerFactory service registration from our manually created IServiceCollection instance
+                // before it is populated into the ContainerBuilder.
+                .ConfigureModuleOptions(options => options.OnModulesRegistered = _ => services.RemoveAll<ILoggerFactory>())
+                .RegisterModuleDependencyInstance(services)
+                .RegisterModuleDependencyInstance(hostBuilderContext.Configuration)
+                .RegisterModuleDependencyInstance(hostBuilderContext.HostingEnvironment)
+                .RegisterModule<DependencyModule>();
+        }
+    );
+```
+
+### Additional examples
+
+You can find some example projects in the solutions below:
+
+- [Company.Product.sln (.NET Framework 4.7.2)](examples/NetFramework/Company.Product.sln)
+  - `ASP.NET Web API 2`
+- [Company.Product.sln (.NET 6 / .NET 8)](examples/NetCore/Company.Product.sln)
+  - `ASP.NET Core Web API` (.NET 6) with `Microsoft.Extensions.Logging`
+  - `ASP.NET Core Web API` (.NET 8) with `Serilog`
+  - `MAUI` (.NET 8)
