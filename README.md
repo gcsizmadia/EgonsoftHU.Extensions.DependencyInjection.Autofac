@@ -477,10 +477,14 @@ builder
             containerBuilder
                 .UseDefaultAssemblyRegistry(nameof(Company))
                 .TreatModulesAsServices()
-                // To avoid overriding ILoggerFactory registration made by UseSerilog() extension method
-                // we remove all ILoggerFactory service registration from our manually created IServiceCollection instance
+                // To avoid overriding ILoggerFactory registration made by UseSerilog()
+                // we remove all ILoggerFactory service registration
+                // from our manually created IServiceCollection instance
                 // before it is populated into the ContainerBuilder.
-                .ConfigureModuleOptions(options => options.OnModulesRegistered = _ => services.RemoveAll<ILoggerFactory>())
+                .ConfigureModuleOptions(
+                    options =>
+                        options.OnModulesRegistered = _ => services.RemoveAll<ILoggerFactory>()
+                )
                 .RegisterModuleDependencyInstance(services)
                 .RegisterModuleDependencyInstance(hostBuilderContext.Configuration)
                 .RegisterModuleDependencyInstance(hostBuilderContext.HostingEnvironment)
